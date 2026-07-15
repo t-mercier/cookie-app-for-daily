@@ -27,8 +27,13 @@ export function useBoard(api: CookiesApi) {
 
   useEffect(() => {
     void reload();
-    const unsubscribe = api.subscribeToChanges(() => void reload());
-    return unsubscribe;
+    try {
+      const unsubscribe = api.subscribeToChanges(() => void reload());
+      return unsubscribe;
+    } catch {
+      // Subscription failed (e.g., missing env vars), return no-op unsubscribe
+      return () => {};
+    }
   }, [api, reload]);
 
   const award = useCallback(
