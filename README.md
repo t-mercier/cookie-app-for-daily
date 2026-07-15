@@ -8,7 +8,7 @@ Live leaderboard highlights whoever has the fewest cookies.
 1. Create a Supabase project.
 2. In the Supabase SQL editor, run `supabase/schema.sql`.
 3. Copy `.env.example` to `.env` and fill in:
-   - `VITE_APP_PASSWORD` — shared unlock password (team value: `your-shared-password`)
+   - `VITE_APP_PASSWORD` — a shared unlock password of your choice (keep it in `.env`, never commit it; do not reuse a password from another service)
    - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` — from Supabase project settings
 4. `npm install && npm run dev`
 
