@@ -11,10 +11,10 @@ beforeEach(() => {
 function fakeApi(): CookiesApi {
   let awarded = 0;
   return {
-    getMembers: async () => [{ id: "a", name: "Ann", avatarKey: "cat" }],
+    getMembers: async () => [{ id: "a", name: "Ann", avatarKey: "knight" }],
     getCookieCounts: async () => ({ a: awarded }),
     awardCookie: async () => { awarded += 1; },
-    addMember: async () => ({ id: "x", name: "X", avatarKey: "cat" }),
+    addMember: async () => ({ id: "x", name: "X", avatarKey: "robot" }),
     removeMember: async () => {},
     subscribeToChanges: () => () => {},
   } as CookiesApi;
@@ -25,7 +25,16 @@ test("unlock, see board, award a cookie", async () => {
   await userEvent.type(screen.getByLabelText(/password/i), "secret");
   await userEvent.click(screen.getByRole("button", { name: /unlock/i }));
 
-  await waitFor(() => expect(screen.getAllByText("Ann")[0]).toBeInTheDocument());
-  await userEvent.click(screen.getByTestId("card-a"));
+  await waitFor(() => expect(screen.getByTestId("row-a")).toBeInTheDocument());
+  await userEvent.click(screen.getByTestId("row-a"));
   expect(screen.getByTestId("cookie-award")).toBeInTheDocument();
+});
+
+test("opens the character-select overlay", async () => {
+  render(<App api={fakeApi()} />);
+  await userEvent.type(screen.getByLabelText(/password/i), "secret");
+  await userEvent.click(screen.getByRole("button", { name: /unlock/i }));
+  await waitFor(() => expect(screen.getByTestId("row-a")).toBeInTheDocument());
+  await userEvent.click(screen.getByRole("button", { name: /add player/i }));
+  expect(screen.getByTestId("character-select")).toBeInTheDocument();
 });
