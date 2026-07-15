@@ -3,5 +3,5 @@ import App from "../App";
 
 test("renders the app title", () => {
   render(<App />);
-  expect(screen.getByText("VE Cookie Board")).toBeInTheDocument();
+  expect(screen.getByText(/ve cookie board/i)).toBeInTheDocument();
 });

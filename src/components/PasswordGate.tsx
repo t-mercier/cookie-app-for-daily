@@ -22,20 +22,25 @@ export function PasswordGate({ children }: { children: ReactNode }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>VE Cookie Board</h1>
-      <label htmlFor="password">Password</label>
-      <input
-        id="password"
-        type="password"
-        value={value}
-        onChange={(e) => {
-          setValue(e.target.value);
-          setError(false);
-        }}
-      />
-      <button type="submit">Unlock</button>
-      {error && <p role="alert">Wrong password</p>}
-    </form>
+    <div className="crt">
+      <h1 className="arcade-title">VE COOKIE BOARD</h1>
+      <form className="pixel-panel" onSubmit={handleSubmit} style={{ maxWidth: 420, margin: "0 auto" }}>
+        <label htmlFor="password">INSERT PASSWORD</label>
+        <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+          <input
+            id="password"
+            className="pixel-input"
+            type="password"
+            value={value}
+            onChange={(e) => {
+              setValue(e.target.value);
+              setError(false);
+            }}
+          />
+          <button type="submit" className="pixel-button">UNLOCK</button>
+        </div>
+        {error && <p role="alert" className="error-text">WRONG PASSWORD</p>}
+      </form>
+    </div>
   );
 }
