@@ -1,12 +1,14 @@
 export const AVATAR_KEYS = [
-  "hamster",
-  "raccoon",
-  "dino",
-  "cat",
-  "fox",
-  "penguin",
+  "knight",
   "robot",
   "alien",
+  "ninja",
+  "mage",
+  "ghost",
+  "cowboy",
+  "skeleton",
+  "astronaut",
+  "vampire",
 ] as const;
 
 export type AvatarKey = (typeof AVATAR_KEYS)[number];

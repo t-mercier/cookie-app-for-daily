@@ -3,15 +3,15 @@ import userEvent from "@testing-library/user-event";
 import { ManageMembers } from "../ManageMembers";
 import type { Member } from "../../types";
 
-const members: Member[] = [{ id: "a", name: "Ann", avatarKey: "cat" }];
+const members: Member[] = [{ id: "a", name: "Ann", avatarKey: "robot" }];
 
 test("adds a member with trimmed name and chosen avatar", async () => {
   const onAdd = vi.fn();
   render(<ManageMembers members={members} onAdd={onAdd} onRemove={() => {}} />);
   await userEvent.type(screen.getByLabelText(/name/i), "  Bob  ");
-  await userEvent.selectOptions(screen.getByLabelText(/avatar/i), "fox");
+  await userEvent.selectOptions(screen.getByLabelText(/avatar/i), "knight");
   await userEvent.click(screen.getByRole("button", { name: /add/i }));
-  expect(onAdd).toHaveBeenCalledWith("Bob", "fox");
+  expect(onAdd).toHaveBeenCalledWith("Bob", "knight");
 });
 
 test("does not add an empty name", async () => {
