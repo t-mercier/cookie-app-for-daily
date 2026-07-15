@@ -1,3 +1,4 @@
+import "./App.css";
 import { useState } from "react";
 import { PasswordGate } from "./components/PasswordGate";
 import { Board } from "./components/Board";
