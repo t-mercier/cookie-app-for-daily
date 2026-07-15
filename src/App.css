@@ -1,41 +1,47 @@
 :root {
-  --bg: #0f0d1f;
-  --panel: #1b1633;
-  --ink: #e8e6ff;
-  --accent: #4be3c0;
-  --warn: #ff5470;
-  --dim: #6b6690;
+  --sky: #5c94fc;
+  --brick: #c84c0c;
+  --brick-light: #e45c10;
+  --block-tan: #fcb890;
+  --coin: #fac000;
+  --pipe-green: #00a800;
+  --ink: #000;
+  --light: #fff;
+  --warn: #d00;
   font-family: "Press Start 2P", monospace;
   font-size: 12px;
   line-height: 1.8;
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink); }
-.crt { min-height: 100vh; padding: 24px; image-rendering: pixelated; }
+body { margin: 0; background: var(--sky); color: var(--ink); }
+.crt { min-height: 100vh; padding: 24px; image-rendering: pixelated; position: relative; }
 .arcade-title {
-  font-size: 20px; color: var(--accent); text-align: center;
-  text-shadow: 3px 3px 0 #000; letter-spacing: 2px; margin: 8px 0 24px;
+  font-size: 20px; color: var(--light); text-align: center;
+  text-shadow: -2px -2px 0 var(--ink), 2px -2px 0 var(--ink), -2px 2px 0 var(--ink), 2px 2px 0 var(--ink), -3px 0 0 var(--ink), 3px 0 0 var(--ink), 0 -3px 0 var(--ink), 0 3px 0 var(--ink);
+  letter-spacing: 2px; word-spacing: 8px; margin: 8px 0 24px;
 }
 .pixel-panel {
-  background: var(--panel); border: 4px solid var(--ink);
-  box-shadow: 0 0 0 4px #000, 8px 8px 0 0 #000; padding: 16px;
+  background: var(--brick); border: 4px solid var(--ink);
+  box-shadow: 0 0 0 4px var(--ink), 6px 6px 0 0 rgba(0,0,0,0.4); padding: 16px;
 }
 .pixel-button {
-  font-family: inherit; font-size: 12px; color: #000; background: var(--accent);
-  border: 3px solid #000; padding: 8px 12px; cursor: pointer;
+  font-family: inherit; font-size: 12px; color: var(--ink); background: var(--coin);
+  border: 3px solid var(--ink); padding: 8px 12px; cursor: pointer;
 }
-.pixel-button:hover { filter: brightness(1.1); }
+.pixel-button:hover { filter: brightness(0.9); }
 .pixel-input {
-  font-family: inherit; font-size: 12px; color: var(--ink); background: #000;
+  font-family: inherit; font-size: 12px; color: var(--ink); background: var(--light);
   border: 3px solid var(--ink); padding: 8px;
 }
-.error-text { color: var(--warn); }
+.error-text { color: var(--warn); text-shadow: -1px -1px 0 var(--light), 1px -1px 0 var(--light), -1px 1px 0 var(--light), 1px 1px 0 var(--light); }
 .blink { animation: blink 1s steps(2, start) infinite; }
 @keyframes blink { to { visibility: hidden; } }
-/* subtle scanlines */
+/* ground strip at bottom */
 .crt::before {
-  content: ""; position: fixed; inset: 0; pointer-events: none;
-  background: repeating-linear-gradient(rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.15) 2px 4px);
+  content: ""; position: fixed; bottom: 0; left: 0; right: 0; height: 80px; pointer-events: none;
+  background: linear-gradient(to bottom, #8b4513 0%, #6b3410 50%, #5a2d0c 100%);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+  z-index: -1;
 }
 /* score board and row styling */
 .score-table {
@@ -43,24 +49,31 @@ body { margin: 0; background: var(--bg); color: var(--ink); }
 }
 .score-row {
   width: 100%; text-align: left; display: flex; align-items: center; gap: 12px;
-  background: var(--panel); border: 2px solid var(--ink); color: var(--ink);
+  background: var(--brick); border: 3px solid var(--ink); color: var(--light);
   font-family: inherit; font-size: 12px; padding: 12px 16px; cursor: pointer;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.2);
 }
-.score-row:hover { filter: brightness(1.15); }
+.score-row:hover { filter: brightness(1.2); }
 .score-row .rank {
-  min-width: 40px; font-weight: bold; color: var(--accent);
+  min-width: 40px; font-weight: bold; color: var(--coin);
 }
 .score-row .name {
   flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .score-row .score {
-  min-width: 100px; text-align: right; color: var(--accent); font-weight: bold;
+  min-width: 100px; text-align: right; color: var(--coin); font-weight: bold;
 }
 .score-row .warn {
-  color: var(--warn);
+  color: #ffd700;
+  text-shadow: -1px -1px 0 var(--ink), 1px -1px 0 var(--ink), -1px 1px 0 var(--ink), 1px 1px 0 var(--ink);
 }
 /* selected character highlight */
 .pixel-button.selected {
-  box-shadow: inset 0 0 0 3px var(--accent), 0 0 0 2px var(--accent);
-  filter: brightness(1.2);
+  box-shadow: inset 0 0 0 3px var(--pipe-green), 0 0 0 3px var(--pipe-green);
+  filter: brightness(1.1);
+}
+/* character select overlay modal background */
+.character-select {
+  background: rgba(92, 148, 252, 0.95) !important;
+  z-index: 1000;
 }

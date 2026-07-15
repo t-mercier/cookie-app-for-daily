@@ -8,13 +8,13 @@ const board: BoardMember[] = [
   { id: "a", name: "Ann", avatarKey: "knight", cookieCount: 1, isLagging: true },
 ];
 
-test("renders rows in given order with zero-padded scores", () => {
+test("renders rows in given order with cookie counter scores", () => {
   render(<ScoreTable board={board} onAward={() => {}} />);
   const rows = screen.getAllByTestId(/^row-/);
   expect(rows[0]).toHaveAttribute("data-testid", "row-b");
   expect(rows[1]).toHaveAttribute("data-testid", "row-a");
-  expect(screen.getByText("00005")).toBeInTheDocument();
-  expect(screen.getByText("00001")).toBeInTheDocument();
+  expect(screen.getByText("🍪×5")).toBeInTheDocument();
+  expect(screen.getByText("🍪×1")).toBeInTheDocument();
 });
 
 test("marks lagging members", () => {
