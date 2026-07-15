@@ -8,22 +8,38 @@ export function ManageMembers({
   onRemove,
 }: {
   members: Member[];
-  onAdd: (name: string, avatarKey: string) => void;
-  onRemove: (id: string) => void;
+  onAdd: (name: string, avatarKey: string) => void | Promise<void>;
+  onRemove: (id: string) => void | Promise<void>;
 }) {
   const [name, setName] = useState("");
   const [avatarKey, setAvatarKey] = useState<string>(AVATAR_KEYS[0]);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleAdd() {
+  async function handleAdd() {
     const trimmed = name.trim();
     if (!trimmed) return;
-    onAdd(trimmed, avatarKey);
-    setName("");
+    setError(null);
+    try {
+      await Promise.resolve(onAdd(trimmed, avatarKey));
+      setName("");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Could not add member, try again");
+    }
+  }
+
+  async function handleRemove(id: string) {
+    setError(null);
+    try {
+      await Promise.resolve(onRemove(id));
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Could not remove member, try again");
+    }
   }
 
   return (
     <section>
       <h2>Manage members</h2>
+      {error && <p role="alert">{error}</p>}
       <label htmlFor="member-name">Name</label>
       <input id="member-name" value={name} onChange={(e) => setName(e.target.value)} />
 
@@ -51,7 +67,7 @@ export function ManageMembers({
             <button
               type="button"
               aria-label={`Remove ${member.name}`}
-              onClick={() => onRemove(member.id)}
+              onClick={() => void handleRemove(member.id)}
             >
               ✕
             </button>

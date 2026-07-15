@@ -27,3 +27,40 @@ test("removes an existing member", async () => {
   await userEvent.click(screen.getByRole("button", { name: /remove ann/i }));
   expect(onRemove).toHaveBeenCalledWith("a");
 });
+
+test("clears name input only after successful add", async () => {
+  const onAdd = vi.fn(async () => {});
+  render(<ManageMembers members={members} onAdd={onAdd} onRemove={() => {}} />);
+  const input = screen.getByLabelText(/name/i);
+  await userEvent.type(input, "Charlie");
+  await userEvent.click(screen.getByRole("button", { name: /add/i }));
+  await vi.waitFor(() => {
+    expect(input).toHaveValue("");
+  });
+});
+
+test("does not clear name input when add fails", async () => {
+  const onAdd = vi.fn(async () => {
+    throw new Error("Network error");
+  });
+  render(<ManageMembers members={members} onAdd={onAdd} onRemove={() => {}} />);
+  const input = screen.getByLabelText(/name/i);
+  await userEvent.type(input, "David");
+  await userEvent.click(screen.getByRole("button", { name: /add/i }));
+  await vi.waitFor(() => {
+    expect(input).toHaveValue("David");
+  });
+  expect(screen.getByRole("alert")).toBeInTheDocument();
+});
+
+test("shows error when remove fails", async () => {
+  const onRemove = vi.fn(async () => {
+    throw new Error("Delete failed");
+  });
+  render(<ManageMembers members={members} onAdd={() => {}} onRemove={onRemove} />);
+  await userEvent.click(screen.getByRole("button", { name: /remove ann/i }));
+  await vi.waitFor(() => {
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("Delete failed");
+  });
+});

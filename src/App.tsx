@@ -29,8 +29,8 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
         <CookieAward show={celebrating} onDone={() => setCelebrating(false)} />
         <ManageMembers
           members={board}
-          onAdd={(name, avatarKey) => void api.addMember(name, avatarKey)}
-          onRemove={(id) => void api.removeMember(id)}
+          onAdd={(name, avatarKey) => api.addMember(name, avatarKey).then(() => {})}
+          onRemove={(id) => api.removeMember(id)}
         />
       </main>
     </PasswordGate>
