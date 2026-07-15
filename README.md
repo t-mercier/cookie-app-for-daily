@@ -1,32 +1,23 @@
-# React + TypeScript + Vite
+# VE Cookie Board
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Fun team board: click whoever led the daily standup to award them a cookie.
+Live leaderboard highlights whoever has the fewest cookies.
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. Create a Supabase project.
+2. In the Supabase SQL editor, run `supabase/schema.sql`.
+3. Copy `.env.example` to `.env` and fill in:
+   - `VITE_APP_PASSWORD` — shared unlock password (team value: `your-shared-password`)
+   - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` — from Supabase project settings
+4. `npm install && npm run dev`
 
-## React Compiler
+## Deploy (Vercel)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Import the repo in Vercel and set the three `VITE_*` env vars in project settings.
 
-## Expanding the Oxlint configuration
+## Security note
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+The shared password gates the UI only. The Supabase anon key lives in the client
+and RLS write rules are open, so this is a latch, not a vault — acceptable for an
+internal fun tool.
