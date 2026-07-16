@@ -65,9 +65,10 @@ body { margin: 0; background: var(--bg-dark); color: var(--text-light); }
 .score-row .warn {
   color: var(--warn-red);
 }
-/* laggard label sits in the gap between the name and the cookie count */
+/* laggard label sits centered in the gap between the name and the cookie count, wrapping to 2 lines */
 .score-row .needs-cookies {
-  margin-left: auto; font-size: 9px; white-space: nowrap;
+  margin-left: auto; font-size: 9px; width: 64px; text-align: center;
+  white-space: normal; line-height: 1.3;
 }
 /* avatar badge — round with ring border */
 .avatar-badge {
