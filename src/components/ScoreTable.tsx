@@ -10,8 +10,8 @@ export function ScoreTable({
 }) {
   return (
     <div className="score-table pixel-panel">
-      {board.map((member, index) => (
-        <ScoreRow key={member.id} rank={index + 1} member={member} onAward={onAward} />
+      {board.map((member) => (
+        <ScoreRow key={member.id} member={member} onAward={onAward} />
       ))}
     </div>
   );

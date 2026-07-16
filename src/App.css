@@ -52,9 +52,6 @@ body { margin: 0; background: var(--bg-dark); color: var(--text-light); }
   break-inside: avoid;
 }
 .score-row:hover { filter: brightness(1.15); }
-.score-row .rank {
-  min-width: 40px; font-weight: bold; color: var(--accent-neon);
-}
 .score-row .name {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 40%;
 }

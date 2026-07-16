@@ -1,39 +1,42 @@
 import type { BoardMember } from "../types";
 
 export interface StatsResult {
-  total: number;
-  leader: string | null;
-  laggard: string | null;
+  leaders: string[];
+  losers: string[];
 }
 
 export function computeStats(board: BoardMember[]): StatsResult {
   if (board.length === 0) {
-    return { total: 0, leader: null, laggard: null };
+    return { leaders: [], losers: [] };
   }
 
-  let total = 0;
   let maxCookies = -Infinity;
   let minCookies = Infinity;
-  let leaderName: string | null = null;
-  let laggardName: string | null = null;
+  const leaderNames: string[] = [];
+  const loserNames: string[] = [];
 
+  // First pass: find max and min
   for (const member of board) {
-    total += member.cookieCount;
-
     if (member.cookieCount > maxCookies) {
       maxCookies = member.cookieCount;
-      leaderName = member.name;
     }
-
     if (member.cookieCount < minCookies) {
       minCookies = member.cookieCount;
-      laggardName = member.name;
+    }
+  }
+
+  // Second pass: collect all members at max and min, preserving board order
+  for (const member of board) {
+    if (member.cookieCount === maxCookies) {
+      leaderNames.push(member.name);
+    }
+    if (member.cookieCount === minCookies) {
+      loserNames.push(member.name);
     }
   }
 
   return {
-    total,
-    leader: leaderName,
-    laggard: laggardName,
+    leaders: leaderNames,
+    losers: loserNames,
   };
 }
