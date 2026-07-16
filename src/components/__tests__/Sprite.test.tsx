@@ -10,7 +10,12 @@ test("renders a distinct sprite for every avatar key", () => {
   }
 });
 
-test("renders a fallback for an unknown key", () => {
-  render(<Sprite avatarKey="not-real" size={32} />);
-  expect(screen.getByTestId("sprite-unknown")).toBeInTheDocument();
+test("renders distinct avatars for different keys", () => {
+  const { rerender } = render(<Sprite avatarKey="knight" size={32} />);
+  const knightSrc = screen.getByTestId("sprite-knight").getAttribute("src");
+
+  rerender(<Sprite avatarKey="robot" size={32} />);
+  const robotSrc = screen.getByTestId("sprite-robot").getAttribute("src");
+
+  expect(knightSrc).not.toBe(robotSrc);
 });
