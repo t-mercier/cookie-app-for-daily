@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { PasswordGate } from "../PasswordGate";
 
 beforeEach(() => {
-  sessionStorage.clear();
+  localStorage.clear();
   vi.stubEnv("VITE_APP_PASSWORD", "secret");
 });
 

@@ -5,7 +5,7 @@ const STORAGE_KEY = "ve-cookie-unlocked";
 
 export function PasswordGate({ children }: { children: ReactNode }) {
   const [unlocked, setUnlocked] = useState(
-    () => sessionStorage.getItem(STORAGE_KEY) === "true"
+    () => localStorage.getItem(STORAGE_KEY) === "true"
   );
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
@@ -15,7 +15,7 @@ export function PasswordGate({ children }: { children: ReactNode }) {
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
     if (value === import.meta.env.VITE_APP_PASSWORD) {
-      sessionStorage.setItem(STORAGE_KEY, "true");
+      localStorage.setItem(STORAGE_KEY, "true");
       setUnlocked(true);
     } else {
       setError(true);

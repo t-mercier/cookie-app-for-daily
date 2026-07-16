@@ -4,7 +4,7 @@ import App from "../App";
 import type { CookiesApi } from "../data/cookiesApi";
 
 beforeEach(() => {
-  sessionStorage.clear();
+  localStorage.clear();
   vi.stubEnv("VITE_APP_PASSWORD", "secret");
 });
 
