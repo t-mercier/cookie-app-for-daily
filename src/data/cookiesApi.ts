@@ -96,6 +96,14 @@ export function createCookiesApi(client: SupabaseClient) {
         client.removeChannel(channel);
       };
     },
+
+    async resetAllCookies(): Promise<void> {
+      const { error } = await client
+        .from("cookies")
+        .delete()
+        .gte("awarded_at", "1970-01-01");
+      if (error) throw new Error(error.message);
+    },
   };
 }
 

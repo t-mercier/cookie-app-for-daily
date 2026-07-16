@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
 import { PasswordGate } from "./components/PasswordGate";
 import { ScoreTable } from "./components/ScoreTable";
@@ -7,38 +7,23 @@ import { CookieAward } from "./components/CookieAward";
 import { CharacterSelect } from "./components/CharacterSelect";
 import { NavigationBar } from "./components/NavigationBar";
 import { VEBoard } from "./components/VEBoard";
+import { ResetConfirm } from "./components/ResetConfirm";
 import { PixelCookie } from "./components/PixelCookie";
 import { useBoard } from "./hooks/useBoard";
 import { computeStats } from "./logic/stats";
 import { cookiesApi, type CookiesApi } from "./data/cookiesApi";
 
 export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
-  const { board, loading, error, award, removeCookie } = useBoard(api);
-  const [celebrating, setCelebrating] = useState(false);
-  const [celebratingName, setCelebratingName] = useState<string>();
+  const { board, loading, error, award, removeCookie, reload } = useBoard(api);
+  const [lastAward, setLastAward] = useState<{ name: string; key: number } | null>(null);
+  const [resetOpen, setResetOpen] = useState(false);
   const [view, setView] = useState<"board" | "players" | "ve">("board");
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
 
   async function handleAward(memberId: string) {
     const member = board.find((m) => m.id === memberId);
-    setCelebratingName(member?.name);
-    setCelebrating(true);
-    // Clear any existing timeout
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
+    if (member) {
+      setLastAward({ name: member.name, key: (lastAward?.key ?? 0) + 1 });
     }
-    // Set new timeout to dismiss after ~4.5s (matches animation duration)
-    timeoutRef.current = setTimeout(() => {
-      setCelebrating(false);
-    }, 4500);
     await award(memberId);
   }
 
@@ -78,8 +63,8 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
                     </div>
                   </div>
                   <div>
-                    <StatsPanel board={board} />
-                    <CookieAward show={celebrating} memberName={celebratingName} onDone={() => setCelebrating(false)} />
+                    <StatsPanel board={board} onReset={() => setResetOpen(true)} />
+                    {lastAward && <CookieAward key={lastAward.key} memberName={lastAward.name} />}
                   </div>
                 </div>
               </>
@@ -102,6 +87,15 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
           </div>
         </div>
       </div>
+      <ResetConfirm
+        open={resetOpen}
+        onCancel={() => setResetOpen(false)}
+        onConfirm={async () => {
+          await api.resetAllCookies();
+          await reload();
+          setResetOpen(false);
+        }}
+      />
     </PasswordGate>
   );
 }

@@ -20,7 +20,7 @@ export function ScoreRow({
     if (!awarding) return;
     const timer = setTimeout(() => {
       setAwarding(false);
-    }, 700);
+    }, 1500);
     return () => clearTimeout(timer);
   }, [awarding]);
 
@@ -47,7 +47,7 @@ export function ScoreRow({
 
       {awarding && (
         <div data-testid={`cookie-fly-${member.id}`} className="cookie-fly">
-          <PixelCookie size={16} />
+          <PixelCookie size={22} />
         </div>
       )}
     </button>

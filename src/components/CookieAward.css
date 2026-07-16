@@ -3,14 +3,6 @@
   margin-top: 14px;
 }
 
-.cookie-award-dialog.active {
-  animation: fadeInOut 4.5s ease-in-out forwards;
-}
-
-.cookie-award-dialog.idle {
-  pointer-events: auto;
-}
-
 .dialog-box {
   margin-top: 0;
   position: relative;
@@ -29,24 +21,27 @@
   overflow: hidden;
   white-space: nowrap;
   width: 0;
-  animation: type 4.5s steps(50, end) forwards;
+  animation: type 0.5s steps(50, end) forwards;
 }
 
 .dl-2 {
   opacity: 0;
-  animation: show2 4.5s steps(1) forwards;
+  animation: show2 0.8s steps(1) forwards;
+  animation-delay: 0.2s;
 }
 
 .dl-3 {
   opacity: 0;
-  animation: show3 4.5s steps(1) forwards;
+  animation: show3 1s steps(1) forwards;
+  animation-delay: 0.5s;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .dl-3 svg {
-  animation: pop 4.5s steps(1) forwards;
+  animation: pop 1s steps(1) forwards;
+  animation-delay: 0.5s;
 }
 
 .adv {
@@ -76,24 +71,9 @@
   animation: blink 1s steps(1) infinite;
 }
 
-@keyframes fadeInOut {
-  0% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
 @keyframes type {
   0% {
     width: 0;
-  }
-  25% {
-    width: 100%;
   }
   100% {
     width: 100%;
@@ -101,37 +81,31 @@
 }
 
 @keyframes show2 {
-  0%, 35% {
+  0% {
     opacity: 0;
-  }
-  37%, 90% {
-    opacity: 1;
   }
   100% {
-    opacity: 0;
+    opacity: 1;
   }
 }
 
 @keyframes show3 {
-  0%, 60% {
+  0% {
     opacity: 0;
-  }
-  62%, 90% {
-    opacity: 1;
   }
   100% {
-    opacity: 0;
+    opacity: 1;
   }
 }
 
 @keyframes pop {
-  0%, 60% {
+  0% {
     transform: scale(0);
   }
-  65% {
+  30% {
     transform: scale(1.5) rotate(8deg);
   }
-  70%, 100% {
+  100% {
     transform: scale(1) rotate(0);
   }
 }

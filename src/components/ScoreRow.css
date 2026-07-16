@@ -3,7 +3,7 @@
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  animation: cookieFly 700ms steps(6) forwards;
+  animation: cookieFly 1500ms steps(10) forwards;
   pointer-events: none;
 }
 
@@ -12,7 +12,20 @@
     transform: translateY(-50%) translateX(0) scale(1);
     opacity: 1;
   }
-  70% {
+  25% {
+    transform: translateY(-120%) translateX(-15px) scale(1.1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-180%) translateX(-30px) scale(1);
+    opacity: 1;
+  }
+  65% {
+    transform: translateY(-50%) translateX(-55px) scaleY(1.2) scaleX(0.9);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(-50%) translateX(-58px) scaleY(0.5) scaleX(1.4);
     opacity: 1;
   }
   100% {

@@ -4,8 +4,10 @@ import { Sprite } from "./Sprite";
 
 export function StatsPanel({
   board,
+  onReset,
 }: {
   board: BoardMember[];
+  onReset?: () => void;
 }) {
   const stats = computeStats(board);
 
@@ -48,6 +50,17 @@ export function StatsPanel({
             </div>
           </div>
         </div>
+
+        {onReset && (
+          <button
+            className="pixel-button danger"
+            onClick={onReset}
+            data-testid="reset-cookies"
+            style={{ marginTop: "12px", width: "100%" }}
+          >
+            RESET COOKIES
+          </button>
+        )}
       </div>
     </div>
   );
