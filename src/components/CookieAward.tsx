@@ -1,39 +1,49 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { PixelCookie } from "./PixelCookie";
+import "./CookieAward.css";
 
 export function CookieAward({
   show,
+  memberName,
   onDone,
 }: {
   show: boolean;
+  memberName?: string;
   onDone: () => void;
 }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!show) return;
+
+    // Reset animation by triggering reflow
+    if (containerRef.current) {
+      void containerRef.current.offsetHeight;
+    }
+  }, [show]);
+
+  const handleAnimationEnd = () => {
+    onDone();
+  };
+
+  if (!show) return null;
+
   return (
-    <AnimatePresence onExitComplete={onDone}>
-      {show && (
-        <motion.div
-          data-testid="cookie-award"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeOut" } }}
-          transition={{
-            scale: { type: "spring", stiffness: 460, damping: 11 },
-            opacity: { duration: 0.15 },
-          }}
-          style={{
-            position: "fixed",
-            inset: 0,
-            display: "grid",
-            placeItems: "center",
-            pointerEvents: "none",
-            imageRendering: "pixelated",
-          }}
-        >
-          <span style={{ fontSize: "5rem", textShadow: "4px 4px 0 #000" }}>🍪</span>
-          <span className="arcade-title" style={{ position: "absolute", bottom: "20%" }}>
-            +1 COOKIE!
-          </span>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div
+      ref={containerRef}
+      data-testid="cookie-award"
+      className="cookie-award-dialog"
+      onAnimationEnd={handleAnimationEnd}
+    >
+      <div className="box dialog-box">
+        <div className="dl dl-1">{(memberName ?? "SOMEONE").toUpperCase()} LED THE DAILY!</div>
+        <div className="dl dl-2">GOOD JOB, BRAVE LITTLE ONE... *PAT PAT*</div>
+        <div className="dl dl-3">
+          HERE, HAVE A COOKIE!
+          <PixelCookie size={18} />
+        </div>
+        <span className="adv">▼</span>
+      </div>
+    </div>
   );
 }

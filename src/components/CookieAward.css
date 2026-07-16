@@ -1,0 +1,144 @@
+.cookie-award-dialog {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  pointer-events: none;
+  animation: fadeInOut 4.5s ease-in-out forwards;
+}
+
+.dialog-box {
+  margin-top: 0;
+  position: relative;
+  min-height: 78px;
+}
+
+.dl {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  line-height: 1.85;
+  color: var(--ink);
+}
+
+.dl-1 {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  animation: type 4.5s steps(50, end) forwards;
+}
+
+.dl-2 {
+  opacity: 0;
+  animation: show2 4.5s steps(1) forwards;
+}
+
+.dl-3 {
+  opacity: 0;
+  animation: show3 4.5s steps(1) forwards;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dl-3 svg {
+  animation: pop 4.5s steps(1) forwards;
+}
+
+.adv {
+  position: absolute;
+  right: 6px;
+  bottom: 2px;
+  font-size: 12px;
+  color: var(--ink);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes type {
+  0% {
+    width: 0;
+  }
+  25% {
+    width: 100%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes show2 {
+  0%, 35% {
+    opacity: 0;
+  }
+  37%, 90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes show3 {
+  0%, 60% {
+    opacity: 0;
+  }
+  62%, 90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes pop {
+  0%, 60% {
+    transform: scale(0);
+  }
+  65% {
+    transform: scale(1.5) rotate(8deg);
+  }
+  70%, 100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cookie-award-dialog,
+  .dl-1,
+  .dl-2,
+  .dl-3,
+  .dl-3 svg,
+  .adv {
+    animation: none;
+  }
+
+  .dl-1,
+  .dl-2,
+  .dl-3 {
+    opacity: 1;
+    width: 100%;
+  }
+
+  .cookie-award-dialog {
+    animation: none;
+  }
+}

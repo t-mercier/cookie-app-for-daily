@@ -14,6 +14,7 @@ import { cookiesApi, type CookiesApi } from "./data/cookiesApi";
 export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
   const { board, loading, error, award, removeCookie } = useBoard(api);
   const [celebrating, setCelebrating] = useState(false);
+  const [celebratingName, setCelebratingName] = useState<string>();
   const [view, setView] = useState<"board" | "players" | "ve">("board");
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -26,15 +27,17 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
   }, []);
 
   async function handleAward(memberId: string) {
+    const member = board.find((m) => m.id === memberId);
+    setCelebratingName(member?.name);
     setCelebrating(true);
     // Clear any existing timeout
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    // Set new timeout to dismiss after 2s
+    // Set new timeout to dismiss after ~4.5s (matches animation duration)
     timeoutRef.current = setTimeout(() => {
       setCelebrating(false);
-    }, 2000);
+    }, 4500);
     await award(memberId);
   }
 
@@ -84,7 +87,7 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
             ) : (
               <VEBoard />
             )}
-            <CookieAward show={celebrating} onDone={() => setCelebrating(false)} />
+            <CookieAward show={celebrating} memberName={celebratingName} onDone={() => setCelebrating(false)} />
           </div>
         </div>
       </div>
