@@ -13,7 +13,7 @@
 body { margin: 0; background: var(--bg-dark); color: var(--text-light); }
 .crt { min-height: 100vh; padding: 24px; image-rendering: pixelated; position: relative; }
 .crt:not(.character-select) {
-  max-width: 520px; margin: 32px auto; min-height: auto; background: var(--bg-panel); border: 2px solid #444;
+  max-width: 820px; margin: 32px auto; min-height: auto; background: var(--bg-panel); border: 2px solid #444;
   border-radius: 8px; padding: 24px;
 }
 .arcade-title {
@@ -76,4 +76,46 @@ body { margin: 0; background: var(--bg-dark); color: var(--text-light); }
 .character-select {
   background: rgba(26, 26, 26, 0.98) !important;
   z-index: 1000;
+}
+/* two-column layout */
+.board-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+/* stats panel */
+.stats-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+.stat-label {
+  color: var(--accent-neon);
+  font-weight: bold;
+  min-width: 100px;
+}
+.stat-value {
+  color: var(--text-light);
+  text-align: right;
+  flex: 1;
+}
+.stat-value.warn {
+  color: var(--warn-red);
+}
+.manage-button {
+  margin-top: 8px;
+  width: 100%;
+}
+/* responsive: stack on narrow screens */
+@media (max-width: 640px) {
+  .board-layout {
+    grid-template-columns: 1fr;
+  }
 }

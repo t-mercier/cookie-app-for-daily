@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import { PasswordGate } from "./components/PasswordGate";
 import { ScoreTable } from "./components/ScoreTable";
+import { StatsPanel } from "./components/StatsPanel";
 import { CookieAward } from "./components/CookieAward";
 import { CharacterSelect } from "./components/CharacterSelect";
 import { useBoard } from "./hooks/useBoard";
@@ -30,13 +31,11 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
         {loading ? (
           <p className="arcade-title">LOADING…</p>
         ) : (
-          <ScoreTable board={board} onAward={handleAward} />
+          <div className="board-layout">
+            <ScoreTable board={board} onAward={handleAward} />
+            <StatsPanel board={board} onManage={() => setSelectOpen(true)} />
+          </div>
         )}
-        <div style={{ textAlign: "center", marginTop: 16 }}>
-          <button type="button" className="pixel-button" onClick={() => setSelectOpen(true)}>
-            + ADD PLAYER
-          </button>
-        </div>
         <CookieAward show={celebrating} onDone={() => setCelebrating(false)} />
         <CharacterSelect
           open={selectOpen}

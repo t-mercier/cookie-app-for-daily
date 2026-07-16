@@ -37,6 +37,6 @@ test("opens the character-select overlay", async () => {
   await userEvent.type(screen.getByLabelText(/password/i), "secret");
   await userEvent.click(screen.getByRole("button", { name: /unlock/i }));
   await waitFor(() => expect(screen.getByTestId("row-a")).toBeInTheDocument());
-  await userEvent.click(screen.getByRole("button", { name: /add player/i }));
+  await userEvent.click(screen.getByRole("button", { name: /manage/i }));
   expect(screen.getByTestId("character-select")).toBeInTheDocument();
 });
