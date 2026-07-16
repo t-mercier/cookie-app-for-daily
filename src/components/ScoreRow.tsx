@@ -8,9 +8,11 @@ import "./ScoreRow.css";
 export function ScoreRow({
   member,
   onAward,
+  isNeedy,
 }: {
   member: BoardMember;
   onAward: (id: string) => void;
+  isNeedy?: boolean;
 }) {
   const [awarding, setAwarding] = useState(false);
 
@@ -38,7 +40,7 @@ export function ScoreRow({
     >
       <Sprite avatarKey={member.avatarKey} size={32} />
       <span className="name">{member.name}</span>
-      {member.isLagging && (
+      {isNeedy && (
         <span role="status" className="warn needs-cookies">NEEDS COOKIES!</span>
       )}
       <span className="score"><PixelCookie size={15} /> {formatScore(member.cookieCount)}</span>

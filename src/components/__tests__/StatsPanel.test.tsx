@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { StatsPanel } from "../StatsPanel";
 import type { BoardMember } from "../../types";
 
@@ -10,7 +9,7 @@ describe("StatsPanel", () => {
       { id: "1", name: "Alice", avatarKey: "knight", cookieCount: 10, isLagging: false },
       { id: "2", name: "Bob", avatarKey: "robot", cookieCount: 20, isLagging: false },
     ];
-    render(<StatsPanel board={board} onManage={() => {}} />);
+    render(<StatsPanel board={board} />);
 
     // Both should appear (Bob as leader, Alice in needsCookies)
     expect(screen.getAllByTestId("sprite-robot")).toHaveLength(2); // Bob appears in both leaders and needsCookies (3 lowest)
@@ -18,33 +17,25 @@ describe("StatsPanel", () => {
   });
 
   it("shows dashes for empty board", () => {
-    render(<StatsPanel board={[]} onManage={() => {}} />);
+    render(<StatsPanel board={[]} />);
 
     expect(screen.getAllByText("—")).toHaveLength(2); // leaders and needsCookies dashes
   });
 
-  it("calls onManage when MANAGE button is clicked", async () => {
-    const onManage = vi.fn();
-    render(<StatsPanel board={[]} onManage={onManage} />);
-
-    await userEvent.click(screen.getByRole("button", { name: /manage/i }));
-    expect(onManage).toHaveBeenCalledOnce();
-  });
-
   it("renders the panel with correct testid", () => {
-    render(<StatsPanel board={[]} onManage={() => {}} />);
+    render(<StatsPanel board={[]} />);
     expect(screen.getByTestId("stats-panel")).toBeInTheDocument();
   });
 
-  it("marks needs-cookies label with warn class", () => {
+  it("renders RECORDS and NEEDS COOKIES sections with labels", () => {
     const board: BoardMember[] = [
       { id: "1", name: "Alice", avatarKey: "knight", cookieCount: 5, isLagging: true },
       { id: "2", name: "Bob", avatarKey: "robot", cookieCount: 20, isLagging: false },
     ];
-    render(<StatsPanel board={board} onManage={() => {}} />);
+    render(<StatsPanel board={board} />);
 
-    const label = screen.getByText("NEEDS COOKIES");
-    expect(label).toBeInTheDocument();
+    expect(screen.getByText("RECORDS")).toBeInTheDocument();
+    expect(screen.getByText("NEEDS COOKIES")).toBeInTheDocument();
   });
 
   it("renders all tied leaders when multiple members have max cookies", () => {
@@ -53,7 +44,7 @@ describe("StatsPanel", () => {
       { id: "2", name: "Bob", avatarKey: "robot", cookieCount: 20, isLagging: false },
       { id: "3", name: "Charlie", avatarKey: "wizard", cookieCount: 10, isLagging: true },
     ];
-    render(<StatsPanel board={board} onManage={() => {}} />);
+    render(<StatsPanel board={board} />);
 
     // Alice and Bob are leaders (both have 20)
     // needsCookies: 3 lowest = Alice (20), Bob (20), Charlie (10)
@@ -69,7 +60,7 @@ describe("StatsPanel", () => {
       { id: "3", name: "Charlie", avatarKey: "wizard", cookieCount: 10, isLagging: false },
       { id: "4", name: "Diana", avatarKey: "cat", cookieCount: 20, isLagging: false },
     ];
-    render(<StatsPanel board={board} onManage={() => {}} />);
+    render(<StatsPanel board={board} />);
 
     // needsCookies should have the 3 lowest: Alice (5), Bob (8), Charlie (10)
     // Diana (20) is the leader but not in needsCookies

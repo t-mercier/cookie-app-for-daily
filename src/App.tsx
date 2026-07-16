@@ -9,6 +9,7 @@ import { NavigationBar } from "./components/NavigationBar";
 import { VEBoard } from "./components/VEBoard";
 import { PixelCookie } from "./components/PixelCookie";
 import { useBoard } from "./hooks/useBoard";
+import { computeStats } from "./logic/stats";
 import { cookiesApi, type CookiesApi } from "./data/cookiesApi";
 
 export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
@@ -64,11 +65,16 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
                 <div className="box">
                   <div className="box-label">ROSTER</div>
                   <div className="roster">
-                    <ScoreTable board={board} onAward={handleAward} />
+                    <ScoreTable
+                      board={board}
+                      onAward={handleAward}
+                      onManage={() => setView("players")}
+                      needyIds={computeStats(board).needsCookies.map((m) => m.id)}
+                    />
                   </div>
                 </div>
                 <div>
-                  <StatsPanel board={board} onManage={() => setView("players")} />
+                  <StatsPanel board={board} />
                 </div>
               </div>
             ) : view === "players" ? (

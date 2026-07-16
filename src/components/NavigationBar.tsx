@@ -16,13 +16,6 @@ export function NavigationBar({
       </button>
       <button
         type="button"
-        className={`nav-button ${active === "players" ? "active" : ""}`}
-        onClick={() => onNavigate("players")}
-      >
-        EDIT PLAYERS
-      </button>
-      <button
-        type="button"
         className={`nav-button ${active === "ve" ? "active" : ""}`}
         onClick={() => onNavigate("ve")}
       >

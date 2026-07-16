@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { expect, vi } from "vitest";
 import { ScoreTable } from "../ScoreTable";
 import type { BoardMember } from "../../types";
 
@@ -9,7 +10,7 @@ const board: BoardMember[] = [
 ];
 
 test("renders rows in given order with cookie counter scores", () => {
-  render(<ScoreTable board={board} onAward={() => {}} />);
+  render(<ScoreTable board={board} onAward={() => {}} needyIds={["a"]} />);
   const rows = screen.getAllByTestId(/^row-/);
   expect(rows[0]).toHaveAttribute("data-testid", "row-b");
   expect(rows[1]).toHaveAttribute("data-testid", "row-a");
@@ -18,14 +19,25 @@ test("renders rows in given order with cookie counter scores", () => {
 });
 
 test("marks lagging members", () => {
-  render(<ScoreTable board={board} onAward={() => {}} />);
+  render(<ScoreTable board={board} onAward={() => {}} needyIds={["a"]} />);
   expect(screen.getByTestId("row-a")).toHaveAttribute("data-lagging", "true");
   expect(screen.getByTestId("row-b")).toHaveAttribute("data-lagging", "false");
 });
 
 test("clicking a row awards to that member", async () => {
   const onAward = vi.fn();
-  render(<ScoreTable board={board} onAward={onAward} />);
+  render(<ScoreTable board={board} onAward={onAward} needyIds={["a"]} />);
   await userEvent.click(screen.getByTestId("row-a"));
   expect(onAward).toHaveBeenCalledWith("a");
+});
+
+test("shows MANAGE button when onManage is provided", () => {
+  const onManage = vi.fn();
+  render(<ScoreTable board={board} onAward={() => {}} onManage={onManage} needyIds={["a"]} />);
+  expect(screen.getByRole("button", { name: /manage/i })).toBeInTheDocument();
+});
+
+test("shows needy label on members in needyIds", () => {
+  render(<ScoreTable board={board} onAward={() => {}} needyIds={["a"]} />);
+  expect(screen.getByText("NEEDS COOKIES!")).toBeInTheDocument();
 });

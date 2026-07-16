@@ -221,6 +221,7 @@ h1 {
   white-space: normal;
   line-height: 1.3;
   color: var(--red);
+  font-weight: 700;
 }
 
 .avatar-badge {
@@ -264,6 +265,50 @@ h1 {
 
 .stat-value.warn {
   color: var(--red);
+}
+
+.stat-value.leaders {
+  justify-content: center;
+}
+
+.stats-section {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(28, 28, 28, 0.1);
+}
+
+.stats-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--ink);
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.section-title.warn {
+  color: var(--red);
+}
+
+.leader-with-star {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.gold-star {
+  position: absolute;
+  top: -4px;
+  right: -2px;
+  font-size: 10px;
+  color: var(--gold);
+  font-weight: 700;
 }
 
 /* Buttons */
