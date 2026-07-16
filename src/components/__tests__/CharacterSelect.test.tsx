@@ -12,6 +12,10 @@ function setup(overrides = {}) {
     members,
     onAdd: vi.fn(),
     onRemove: vi.fn(),
+    cookieCounts: { a: 5 },
+    onAward: vi.fn(),
+    onRemoveCookie: vi.fn(),
+    onUpdateMember: vi.fn(),
     ...overrides,
   };
   render(<CharacterSelect {...props} />);
@@ -20,7 +24,17 @@ function setup(overrides = {}) {
 
 test("renders nothing when closed", () => {
   const { container } = render(
-    <CharacterSelect open={false} onClose={() => {}} members={members} onAdd={() => {}} onRemove={() => {}} />
+    <CharacterSelect
+      open={false}
+      onClose={() => {}}
+      members={members}
+      onAdd={() => {}}
+      onRemove={() => {}}
+      cookieCounts={{}}
+      onAward={() => {}}
+      onRemoveCookie={() => {}}
+      onUpdateMember={() => {}}
+    />
   );
   expect(container).toBeEmptyDOMElement();
 });
@@ -68,4 +82,39 @@ test("adds a member with image url when url is provided", async () => {
   await userEvent.type(urlInput, "https://example.com/avatar.png");
   await userEvent.click(screen.getByRole("button", { name: /start/i }));
   expect(onAdd).toHaveBeenCalledWith("Charlie", "https://example.com/avatar.png");
+});
+
+test("clicking + calls onAward with member id", async () => {
+  const onAward = vi.fn();
+  setup({ onAward });
+  await userEvent.click(screen.getByRole("button", { name: /give cookie to ann/i }));
+  expect(onAward).toHaveBeenCalledWith("a");
+});
+
+test("clicking - calls onRemoveCookie with member id", async () => {
+  const onRemoveCookie = vi.fn();
+  setup({ onRemoveCookie });
+  await userEvent.click(screen.getByRole("button", { name: /remove cookie from ann/i }));
+  expect(onRemoveCookie).toHaveBeenCalledWith("a");
+});
+
+test("editing member name and saving calls onUpdateMember", async () => {
+  const onUpdateMember = vi.fn();
+  setup({ onUpdateMember });
+  await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+  const nameInput = screen.getByDisplayValue("Ann");
+  await userEvent.clear(nameInput);
+  await userEvent.type(nameInput, "Alice");
+  await userEvent.click(screen.getByRole("button", { name: /save/i }));
+  expect(onUpdateMember).toHaveBeenCalledWith("a", { name: "Alice", avatarKey: "knight" });
+});
+
+test("editing with empty name does not call onUpdateMember", async () => {
+  const onUpdateMember = vi.fn();
+  setup({ onUpdateMember });
+  await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+  const nameInput = screen.getByDisplayValue("Ann");
+  await userEvent.clear(nameInput);
+  await userEvent.click(screen.getByRole("button", { name: /save/i }));
+  expect(onUpdateMember).not.toHaveBeenCalled();
 });

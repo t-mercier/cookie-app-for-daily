@@ -24,7 +24,7 @@ export function ScoreRow({
       <span className="name">{member.name}</span>
       <span className="score">{formatScore(member.cookieCount)}</span>
       {member.isLagging && (
-        <span role="status" className="warn blink">◄ NEEDS COOKIES!</span>
+        <span role="status" className="warn">◄ NEEDS COOKIES!</span>
       )}
     </button>
   );

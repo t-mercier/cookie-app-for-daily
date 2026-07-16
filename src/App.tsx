@@ -8,7 +8,7 @@ import { useBoard } from "./hooks/useBoard";
 import { cookiesApi, type CookiesApi } from "./data/cookiesApi";
 
 export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
-  const { board, loading, error, award } = useBoard(api);
+  const { board, loading, error, award, removeCookie } = useBoard(api);
   const [celebrating, setCelebrating] = useState(false);
   const [selectOpen, setSelectOpen] = useState(false);
 
@@ -16,6 +16,11 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
     setCelebrating(true);
     await award(memberId);
   }
+
+  const cookieCounts: Record<string, number> = {};
+  board.forEach((member) => {
+    cookieCounts[member.id] = member.cookieCount;
+  });
 
   return (
     <PasswordGate>
@@ -39,6 +44,10 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
           members={board}
           onAdd={(name, avatarKey) => api.addMember(name, avatarKey).then(() => {})}
           onRemove={(id) => api.removeMember(id)}
+          cookieCounts={cookieCounts}
+          onAward={award}
+          onRemoveCookie={removeCookie}
+          onUpdateMember={(id, fields) => api.updateMember(id, fields)}
         />
       </div>
     </PasswordGate>
