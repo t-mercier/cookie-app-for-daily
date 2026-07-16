@@ -39,13 +39,12 @@ test("renders nothing when closed", () => {
   expect(container).toBeEmptyDOMElement();
 });
 
-test("adds a member with picked sprite and trimmed name", async () => {
+test("adds a member with name and empty URL", async () => {
   const onAdd = vi.fn();
   setup({ onAdd });
-  await userEvent.click(screen.getByTestId("pick-robot"));
-  await userEvent.type(screen.getByLabelText(/name/i), "  Bob  ");
+  await userEvent.type(screen.getByLabelText(/^name$/i), "  Bob  ");
   await userEvent.click(screen.getByRole("button", { name: /start/i }));
-  expect(onAdd).toHaveBeenCalledWith("Bob", "robot");
+  expect(onAdd).toHaveBeenCalledWith("Bob", "");
 });
 
 test("does not add on empty name", async () => {
@@ -58,8 +57,7 @@ test("does not add on empty name", async () => {
 test("keeps input and shows error when add fails", async () => {
   const onAdd = vi.fn().mockRejectedValue(new Error("network"));
   setup({ onAdd });
-  await userEvent.click(screen.getByTestId("pick-robot"));
-  const input = screen.getByLabelText(/name/i);
+  const input = screen.getByLabelText(/^name$/i);
   await userEvent.type(input, "Bob");
   await userEvent.click(screen.getByRole("button", { name: /start/i }));
   expect(screen.getByRole("alert")).toBeInTheDocument();
@@ -73,11 +71,11 @@ test("removes an existing member", async () => {
   expect(onRemove).toHaveBeenCalledWith("a");
 });
 
-test("adds a member with image url when url is provided", async () => {
+test("adds a member with name and image url", async () => {
   const onAdd = vi.fn();
   setup({ onAdd });
   const urlInput = screen.getByLabelText(/image url/i);
-  const nameInput = screen.getByLabelText(/name/i);
+  const nameInput = screen.getByLabelText(/^name$/i);
   await userEvent.type(nameInput, "Charlie");
   await userEvent.type(urlInput, "https://example.com/avatar.png");
   await userEvent.click(screen.getByRole("button", { name: /start/i }));
@@ -98,7 +96,7 @@ test("clicking - calls onRemoveCookie with member id", async () => {
   expect(onRemoveCookie).toHaveBeenCalledWith("a");
 });
 
-test("editing member name and saving calls onUpdateMember", async () => {
+test("editing member name and saving calls onUpdateMember with name only", async () => {
   const onUpdateMember = vi.fn();
   setup({ onUpdateMember });
   await userEvent.click(screen.getByRole("button", { name: /edit/i }));
@@ -106,7 +104,18 @@ test("editing member name and saving calls onUpdateMember", async () => {
   await userEvent.clear(nameInput);
   await userEvent.type(nameInput, "Alice");
   await userEvent.click(screen.getByRole("button", { name: /save/i }));
-  expect(onUpdateMember).toHaveBeenCalledWith("a", { name: "Alice", avatarKey: "knight" });
+  expect(onUpdateMember).toHaveBeenCalledWith("a", { name: "Alice" });
+});
+
+test("editing member URL and saving calls onUpdateMember with avatarKey only", async () => {
+  const onUpdateMember = vi.fn();
+  setup({ onUpdateMember });
+  await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+  const urlInput = screen.getByDisplayValue("knight");
+  await userEvent.clear(urlInput);
+  await userEvent.type(urlInput, "https://example.com/new.png");
+  await userEvent.click(screen.getByRole("button", { name: /save/i }));
+  expect(onUpdateMember).toHaveBeenCalledWith("a", { avatarKey: "https://example.com/new.png" });
 });
 
 test("editing with empty name does not call onUpdateMember", async () => {

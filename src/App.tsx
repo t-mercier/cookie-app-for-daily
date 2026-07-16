@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./App.css";
 import { PasswordGate } from "./components/PasswordGate";
 import { ScoreTable } from "./components/ScoreTable";
@@ -12,9 +12,26 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
   const { board, loading, error, award, removeCookie } = useBoard(api);
   const [celebrating, setCelebrating] = useState(false);
   const [selectOpen, setSelectOpen] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   async function handleAward(memberId: string) {
     setCelebrating(true);
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    // Set new timeout to dismiss after 3.5s
+    timeoutRef.current = setTimeout(() => {
+      setCelebrating(false);
+    }, 3500);
     await award(memberId);
   }
 

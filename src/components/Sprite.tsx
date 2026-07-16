@@ -1,12 +1,15 @@
 import { useMemo } from "react";
-import { createAvatar } from "@dicebear/core";
-import { pixelArt } from "@dicebear/collection";
 
-/** Resolve avatarKey to image source: http(s) URL → direct, bundled asset → glob map, otherwise → DiceBear fallback */
+/** Resolve avatarKey to image source: http(s) URL → direct, bundled asset → glob map, otherwise → null (placeholder) */
 export function resolveAvatarSource(
   avatarKey: string,
   bundledMap: Record<string, string> = {}
-): string {
+): string | null {
+  // Empty key → placeholder
+  if (!avatarKey) {
+    return null;
+  }
+
   // 1. HTTP(S) URL
   if (avatarKey.startsWith("http://") || avatarKey.startsWith("https://")) {
     return avatarKey;
@@ -17,8 +20,8 @@ export function resolveAvatarSource(
     return bundledMap[avatarKey];
   }
 
-  // 3. DiceBear fallback
-  return createAvatar(pixelArt, { seed: avatarKey, size: 64 }).toDataUri();
+  // 3. Unknown key → placeholder (no DiceBear fallback)
+  return null;
 }
 
 export function Sprite({ avatarKey, size = 32 }: { avatarKey: string; size?: number }) {
@@ -38,6 +41,30 @@ export function Sprite({ avatarKey, size = 32 }: { avatarKey: string; size?: num
   }, []);
 
   const src = useMemo(() => resolveAvatarSource(avatarKey, bundledMap), [avatarKey, bundledMap]);
+
+  // Render placeholder badge if no valid source
+  if (!src) {
+    return (
+      <div
+        data-testid={`sprite-${avatarKey}`}
+        className="avatar-badge"
+        style={{
+          width: size,
+          height: size,
+          borderRadius: "50%",
+          background: "var(--text-light)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: size * 0.5,
+          color: "var(--bg-dark)",
+          fontWeight: "bold",
+        }}
+      >
+        ?
+      </div>
+    );
+  }
 
   return (
     <img

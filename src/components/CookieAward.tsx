@@ -14,8 +14,15 @@ export function CookieAward({
           data-testid="cookie-award"
           initial={{ scale: 0, rotate: -20, opacity: 0 }}
           animate={{ scale: [0, 1.4, 1], rotate: [-20, 10, 0], opacity: 1 }}
-          exit={{ scale: 0, opacity: 0 }}
-          transition={{ duration: 0.6, times: [0, 0.6, 1] }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          transition={
+            {
+              duration: 0.6,
+              times: [0, 0.6, 1],
+              opacity: { exit: { duration: 0.8 } },
+              scale: { exit: { duration: 0.8 } },
+            } as any
+          }
           style={{
             position: "fixed",
             inset: 0,

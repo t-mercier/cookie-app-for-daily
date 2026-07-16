@@ -1,6 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import type { Member } from "../types";
-import { AVATAR_KEYS, bundledAvatarIds } from "../avatars";
 import { Sprite } from "./Sprite";
 
 export function CharacterSelect({
@@ -25,15 +24,11 @@ export function CharacterSelect({
   onUpdateMember: (id: string, fields: { name?: string; avatarKey?: string }) => void | Promise<void>;
 }) {
   const [name, setName] = useState("");
-  const [selected, setSelected] = useState<string>(AVATAR_KEYS[0]);
   const [imageUrl, setImageUrl] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
-  const [editAvatarKey, setEditAvatarKey] = useState("");
-
-  const bundled = useMemo(() => bundledAvatarIds(), []);
-  const allAvatarIds = useMemo(() => [...bundled, ...AVATAR_KEYS], [bundled]);
+  const [editImageUrl, setEditImageUrl] = useState("");
 
   if (!open) return null;
 
@@ -41,10 +36,9 @@ export function CharacterSelect({
     const trimmed = name.trim();
     if (!trimmed) return;
     setError(null);
-    // If imageUrl is set, use it; otherwise use selected
-    const avatarKey = imageUrl.trim() || selected;
+    const url = imageUrl.trim();
     try {
-      await Promise.resolve(onAdd(trimmed, avatarKey));
+      await Promise.resolve(onAdd(trimmed, url));
       setName("");
       setImageUrl("");
     } catch (caught) {
@@ -64,7 +58,7 @@ export function CharacterSelect({
   function startEdit(member: Member) {
     setEditingId(member.id);
     setEditName(member.name);
-    setEditAvatarKey(member.avatarKey);
+    setEditImageUrl(member.avatarKey);
   }
 
   async function handleUpdateMember() {
@@ -72,10 +66,21 @@ export function CharacterSelect({
     if (!trimmedName) return;
     setError(null);
     try {
-      await Promise.resolve(onUpdateMember(editingId!, { name: trimmedName, avatarKey: editAvatarKey }));
+      const updates: { name?: string; avatarKey?: string } = {};
+      // Only include changed fields
+      if (editName.trim() !== members.find((m) => m.id === editingId)?.name) {
+        updates.name = trimmedName;
+      }
+      if (editImageUrl !== members.find((m) => m.id === editingId)?.avatarKey) {
+        updates.avatarKey = editImageUrl;
+      }
+      // Only call if there are changes
+      if (Object.keys(updates).length > 0) {
+        await Promise.resolve(onUpdateMember(editingId!, updates));
+      }
       setEditingId(null);
       setEditName("");
-      setEditAvatarKey("");
+      setEditImageUrl("");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "COULD NOT UPDATE");
     }
@@ -104,28 +109,9 @@ export function CharacterSelect({
          style={{ position: "fixed", inset: 0, overflow: "auto" }}>
       <h1 className="arcade-title">SELECT YOUR CHARACTER</h1>
       <div className="pixel-panel" style={{ maxWidth: 640, margin: "0 auto" }}>
-        <div className="sprite-grid" style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12 }}>
-          {allAvatarIds.map((key) => (
-            <button
-              key={key}
-              type="button"
-              data-testid={`pick-${key}`}
-              aria-pressed={selected === key && !imageUrl}
-              className={selected === key && !imageUrl ? "pixel-button selected" : "pixel-button"}
-              onClick={() => {
-                setSelected(key);
-                setImageUrl("");
-              }}
-            >
-              <Sprite avatarKey={key} size={40} />
-            </button>
-          ))}
-        </div>
-
-        <div style={{ display: "flex", gap: 8, marginTop: 16, flexWrap: "wrap", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 8, marginTop: 0, flexWrap: "wrap", alignItems: "center" }}>
           <label htmlFor="cs-name">NAME</label>
           <input id="cs-name" className="pixel-input" value={name} onChange={(e) => setName(e.target.value)} />
-          <button type="button" className="pixel-button" onClick={handleAdd}>START</button>
         </div>
 
         <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap", alignItems: "center" }}>
@@ -137,6 +123,10 @@ export function CharacterSelect({
             value={imageUrl}
             onChange={(e) => setImageUrl(e.target.value)}
           />
+        </div>
+
+        <div style={{ marginTop: 12 }}>
+          <button type="button" className="pixel-button" onClick={handleAdd}>START</button>
         </div>
         {error && <p role="alert" className="error-text">{error}</p>}
 
@@ -158,19 +148,15 @@ export function CharacterSelect({
                         onChange={(e) => setEditName(e.target.value)}
                       />
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8 }}>
-                      {allAvatarIds.map((key) => (
-                        <button
-                          key={key}
-                          type="button"
-                          aria-pressed={editAvatarKey === key}
-                          className={editAvatarKey === key ? "pixel-button selected" : "pixel-button"}
-                          onClick={() => setEditAvatarKey(key)}
-                          title={key}
-                        >
-                          <Sprite avatarKey={key} size={32} />
-                        </button>
-                      ))}
+                    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                      <label htmlFor={`edit-url-${member.id}`}>IMAGE URL</label>
+                      <input
+                        id={`edit-url-${member.id}`}
+                        className="pixel-input"
+                        placeholder="https://..."
+                        value={editImageUrl}
+                        onChange={(e) => setEditImageUrl(e.target.value)}
+                      />
                     </div>
                     <div style={{ display: "flex", gap: 8 }}>
                       <button type="button" className="pixel-button" onClick={handleUpdateMember}>SAVE</button>

@@ -1,27 +1,30 @@
 import { render, screen } from "@testing-library/react";
 import { Sprite, resolveAvatarSource } from "../Sprite";
-import { AVATAR_KEYS } from "../../avatars";
 
-test("renders a distinct sprite for every avatar key", () => {
-  for (const key of AVATAR_KEYS) {
-    const { unmount } = render(<Sprite avatarKey={key} size={32} />);
-    expect(screen.getByTestId(`sprite-${key}`)).toBeInTheDocument();
-    unmount();
-  }
+test("renders a sprite for a URL", () => {
+  render(<Sprite avatarKey="https://example.com/avatar.png" size={32} />);
+  expect(screen.getByTestId("sprite-https://example.com/avatar.png")).toBeInTheDocument();
 });
 
-test("renders distinct avatars for different keys", () => {
-  const { rerender } = render(<Sprite avatarKey="knight" size={32} />);
-  const knightSrc = screen.getByTestId("sprite-knight").getAttribute("src");
+test("renders placeholder for empty avatarKey", () => {
+  render(<Sprite avatarKey="" size={32} />);
+  expect(screen.getByTestId("sprite-")).toBeInTheDocument();
+});
 
-  rerender(<Sprite avatarKey="robot" size={32} />);
-  const robotSrc = screen.getByTestId("sprite-robot").getAttribute("src");
+test("renders distinct src for different URLs", () => {
+  const { rerender } = render(<Sprite avatarKey="https://example.com/avatar1.png" size={32} />);
+  const img1 = screen.getByTestId("sprite-https://example.com/avatar1.png") as HTMLImageElement;
+  const src1 = img1.src;
 
-  expect(knightSrc).not.toBe(robotSrc);
+  rerender(<Sprite avatarKey="https://example.com/avatar2.png" size={32} />);
+  const img2 = screen.getByTestId("sprite-https://example.com/avatar2.png") as HTMLImageElement;
+  const src2 = img2.src;
+
+  expect(src1).not.toBe(src2);
 });
 
 test("resolveAvatarSource: http url passthrough", () => {
-  const url = "https://example.com/avatar.png";
+  const url = "http://example.com/avatar.png";
   expect(resolveAvatarSource(url)).toBe(url);
 });
 
@@ -30,14 +33,12 @@ test("resolveAvatarSource: https url passthrough", () => {
   expect(resolveAvatarSource(url)).toBe(url);
 });
 
-test("resolveAvatarSource: unknown key returns data-uri (DiceBear)", () => {
-  const src = resolveAvatarSource("unknownkey123");
-  expect(src).toMatch(/^data:image/);
+test("resolveAvatarSource: empty key returns null", () => {
+  const src = resolveAvatarSource("");
+  expect(src).toBeNull();
 });
 
-test("resolveAvatarSource: bundled asset mapping (empty map)", () => {
-  // jsdom cannot resolve import.meta.glob, so the map will be empty during tests
-  // This test verifies the fallback to DiceBear works
-  const src = resolveAvatarSource("knight", {});
-  expect(src).toMatch(/^data:image/);
+test("resolveAvatarSource: unknown key returns null", () => {
+  const src = resolveAvatarSource("unknownkey123");
+  expect(src).toBeNull();
 });
