@@ -5,13 +5,16 @@ import { ScoreTable } from "./components/ScoreTable";
 import { StatsPanel } from "./components/StatsPanel";
 import { CookieAward } from "./components/CookieAward";
 import { CharacterSelect } from "./components/CharacterSelect";
+import { NavigationBar } from "./components/NavigationBar";
+import { VEBoard } from "./components/VEBoard";
+import { PixelCookie } from "./components/PixelCookie";
 import { useBoard } from "./hooks/useBoard";
 import { cookiesApi, type CookiesApi } from "./data/cookiesApi";
 
 export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
   const { board, loading, error, award, removeCookie } = useBoard(api);
   const [celebrating, setCelebrating] = useState(false);
-  const [selectOpen, setSelectOpen] = useState(false);
+  const [view, setView] = useState<"board" | "players" | "ve">("board");
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -43,28 +46,47 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
   return (
     <PasswordGate>
       <div className="crt">
-        <h1 className="arcade-title">VE COOKIE BOARD</h1>
-        {error && <p role="alert" className="error-text">{error}</p>}
-        {loading ? (
-          <p className="arcade-title">LOADING…</p>
-        ) : (
-          <div className="board-layout">
-            <ScoreTable board={board} onAward={handleAward} />
-            <StatsPanel board={board} onManage={() => setSelectOpen(true)} />
+        <div className="shell">
+          <div className="screen">
+            <h1>
+              <PixelCookie size={22} />
+              VE COOKIE BOARD
+            </h1>
+            <NavigationBar active={view} onNavigate={setView} />
+            {error && <p role="alert" className="error-text">{error}</p>}
+            {loading ? (
+              <p className="arcade-title">LOADING…</p>
+            ) : view === "board" ? (
+              <div className="layout">
+                <div className="box">
+                  <div className="box-label">ROSTER</div>
+                  <div className="roster">
+                    <ScoreTable board={board} onAward={handleAward} />
+                  </div>
+                </div>
+                <div>
+                  <StatsPanel board={board} onManage={() => setView("players")} />
+                </div>
+              </div>
+            ) : view === "players" ? (
+              <CharacterSelect
+                inline
+                open
+                onClose={() => setView("board")}
+                members={board}
+                onAdd={(name, avatarKey) => api.addMember(name, avatarKey).then(() => {})}
+                onRemove={(id) => api.removeMember(id)}
+                cookieCounts={cookieCounts}
+                onAward={award}
+                onRemoveCookie={removeCookie}
+                onUpdateMember={(id, fields) => api.updateMember(id, fields)}
+              />
+            ) : (
+              <VEBoard />
+            )}
+            <CookieAward show={celebrating} onDone={() => setCelebrating(false)} />
           </div>
-        )}
-        <CookieAward show={celebrating} onDone={() => setCelebrating(false)} />
-        <CharacterSelect
-          open={selectOpen}
-          onClose={() => setSelectOpen(false)}
-          members={board}
-          onAdd={(name, avatarKey) => api.addMember(name, avatarKey).then(() => {})}
-          onRemove={(id) => api.removeMember(id)}
-          cookieCounts={cookieCounts}
-          onAward={award}
-          onRemoveCookie={removeCookie}
-          onUpdateMember={(id, fields) => api.updateMember(id, fields)}
-        />
+        </div>
       </div>
     </PasswordGate>
   );

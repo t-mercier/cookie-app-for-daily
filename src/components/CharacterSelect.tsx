@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Member } from "../types";
 import { Sprite } from "./Sprite";
+import { PixelCookie } from "./PixelCookie";
 
 export function CharacterSelect({
   open,
@@ -12,6 +13,7 @@ export function CharacterSelect({
   onAward,
   onRemoveCookie,
   onUpdateMember,
+  inline = false,
 }: {
   open: boolean;
   onClose: () => void;
@@ -22,6 +24,7 @@ export function CharacterSelect({
   onAward: (id: string) => void | Promise<void>;
   onRemoveCookie: (id: string) => void | Promise<void>;
   onUpdateMember: (id: string, fields: { name?: string; avatarKey?: string }) => void | Promise<void>;
+  inline?: boolean;
 }) {
   const [name, setName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -105,10 +108,13 @@ export function CharacterSelect({
   }
 
   return (
-    <div className="crt character-select" data-testid="character-select"
-         style={{ position: "fixed", inset: 0, overflow: "auto" }}>
-      <h1 className="arcade-title">SELECT YOUR CHARACTER</h1>
-      <div className="pixel-panel" style={{ maxWidth: 640, margin: "0 auto" }}>
+    <div
+      className={`crt${!inline ? " character-select" : ""}`}
+      data-testid="character-select"
+      style={!inline ? { position: "fixed", inset: 0, overflow: "auto" } : undefined}
+    >
+      {!inline && <h1 className="arcade-title">SELECT YOUR CHARACTER</h1>}
+      <div className={inline ? "box" : "pixel-panel"} style={!inline ? { maxWidth: 640, margin: "0 auto" } : undefined}>
         <div style={{ display: "flex", gap: 8, marginTop: 0, flexWrap: "wrap", alignItems: "center" }}>
           <label htmlFor="cs-name">NAME</label>
           <input id="cs-name" className="pixel-input" value={name} onChange={(e) => setName(e.target.value)} />
@@ -170,7 +176,7 @@ export function CharacterSelect({
                       <span>{member.name}</span>
                     </div>
                     <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
-                      <span>🍪×{count}</span>
+                      <span><PixelCookie size={12} /> x{count}</span>
                       <button type="button" className="pixel-button" aria-label={`Give cookie to ${member.name}`}
                               onClick={() => void handleAward(member.id)}>+</button>
                       <button type="button" className="pixel-button" aria-label={`Remove cookie from ${member.name}`}
@@ -186,7 +192,7 @@ export function CharacterSelect({
           })}
         </ul>
 
-        <button type="button" className="pixel-button" style={{ marginTop: 16 }} onClick={onClose}>CLOSE</button>
+        {!inline && <button type="button" className="pixel-button" style={{ marginTop: 16 }} onClick={onClose}>CLOSE</button>}
       </div>
     </div>
   );

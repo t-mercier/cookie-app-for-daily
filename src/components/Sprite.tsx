@@ -51,7 +51,7 @@ export function Sprite({ avatarKey, size = 32 }: { avatarKey: string; size?: num
         style={{
           width: size,
           height: size,
-          borderRadius: "50%",
+          borderRadius: "2px",
           background: "var(--text-light)",
           display: "flex",
           alignItems: "center",
@@ -74,7 +74,7 @@ export function Sprite({ avatarKey, size = 32 }: { avatarKey: string; size?: num
       height={size}
       alt={`${avatarKey} avatar`}
       className="avatar-badge"
-      style={{ imageRendering: "pixelated", borderRadius: "50%", objectFit: "cover" }}
+      style={{ imageRendering: "pixelated", borderRadius: "2px", objectFit: "cover" }}
     />
   );
 }

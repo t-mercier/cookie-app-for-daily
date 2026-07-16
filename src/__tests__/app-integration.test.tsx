@@ -37,6 +37,21 @@ test("opens the character-select overlay", async () => {
   await userEvent.type(screen.getByLabelText(/password/i), "secret");
   await userEvent.click(screen.getByRole("button", { name: /unlock/i }));
   await waitFor(() => expect(screen.getByTestId("row-a")).toBeInTheDocument());
-  await userEvent.click(screen.getByRole("button", { name: /manage/i }));
+  await userEvent.click(screen.getByRole("button", { name: /edit players/i }));
   expect(screen.getByTestId("character-select")).toBeInTheDocument();
+});
+
+test("navigates between views", async () => {
+  render(<App api={fakeApi()} />);
+  await userEvent.type(screen.getByLabelText(/password/i), "secret");
+  await userEvent.click(screen.getByRole("button", { name: /unlock/i }));
+  await waitFor(() => expect(screen.getByTestId("row-a")).toBeInTheDocument());
+
+  // Navigate to VE Board
+  await userEvent.click(screen.getByRole("button", { name: /ve board/i }));
+  expect(screen.getByTestId("ve-board")).toBeInTheDocument();
+
+  // Navigate back to Cookie Board
+  await userEvent.click(screen.getByRole("button", { name: /cookie board/i }));
+  expect(screen.getByTestId("row-a")).toBeInTheDocument();
 });

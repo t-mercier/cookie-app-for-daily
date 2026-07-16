@@ -13,8 +13,8 @@ test("renders rows in given order with cookie counter scores", () => {
   const rows = screen.getAllByTestId(/^row-/);
   expect(rows[0]).toHaveAttribute("data-testid", "row-b");
   expect(rows[1]).toHaveAttribute("data-testid", "row-a");
-  expect(screen.getByText("🍪×5")).toBeInTheDocument();
-  expect(screen.getByText("🍪×1")).toBeInTheDocument();
+  expect(screen.getByText("x5")).toBeInTheDocument();
+  expect(screen.getByText("x1")).toBeInTheDocument();
 });
 
 test("marks lagging members", () => {

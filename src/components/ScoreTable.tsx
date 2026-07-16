@@ -9,7 +9,7 @@ export function ScoreTable({
   onAward: (id: string) => void;
 }) {
   return (
-    <div className="score-table pixel-panel">
+    <div className="score-table">
       {board.map((member) => (
         <ScoreRow key={member.id} member={member} onAward={onAward} />
       ))}

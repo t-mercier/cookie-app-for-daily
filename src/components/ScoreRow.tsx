@@ -1,5 +1,6 @@
 import type { BoardMember } from "../types";
 import { Sprite } from "./Sprite";
+import { PixelCookie } from "./PixelCookie";
 import { formatScore } from "../logic/score";
 
 export function ScoreRow({
@@ -22,7 +23,7 @@ export function ScoreRow({
       {member.isLagging && (
         <span role="status" className="warn needs-cookies">NEEDS COOKIES!</span>
       )}
-      <span className="score">{formatScore(member.cookieCount)}</span>
+      <span className="score"><PixelCookie size={15} /> {formatScore(member.cookieCount)}</span>
     </button>
   );
 }

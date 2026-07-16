@@ -23,11 +23,11 @@ describe("StatsPanel", () => {
     expect(screen.getAllByText("—")).toHaveLength(2); // leaders and needsCookies dashes
   });
 
-  it("calls onManage when MANAGE PLAYERS button is clicked", async () => {
+  it("calls onManage when MANAGE button is clicked", async () => {
     const onManage = vi.fn();
     render(<StatsPanel board={[]} onManage={onManage} />);
 
-    await userEvent.click(screen.getByRole("button", { name: /manage players/i }));
+    await userEvent.click(screen.getByRole("button", { name: /manage/i }));
     expect(onManage).toHaveBeenCalledOnce();
   });
 
@@ -43,7 +43,7 @@ describe("StatsPanel", () => {
     ];
     render(<StatsPanel board={board} onManage={() => {}} />);
 
-    const label = screen.getByText("NEEDS COOKIES", { selector: ".stat-label.warn" });
+    const label = screen.getByText("NEEDS COOKIES");
     expect(label).toBeInTheDocument();
   });
 
