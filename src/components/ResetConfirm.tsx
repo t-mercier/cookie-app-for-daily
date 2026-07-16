@@ -14,7 +14,7 @@ export function ResetConfirm({
   }
 
   return (
-    <div className="reset-confirm-overlay">
+    <div className="reset-confirm-overlay" data-testid="reset-confirm">
       <div className="reset-confirm-box box">
         <div className="reset-title">RESET ALL COOKIES?</div>
         <div className="reset-warning">THIS CAN'T BE UNDONE.</div>
