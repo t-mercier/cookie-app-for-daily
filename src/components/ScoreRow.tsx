@@ -22,10 +22,10 @@ export function ScoreRow({
       <span className="rank">{rank}</span>
       <Sprite avatarKey={member.avatarKey} size={32} />
       <span className="name">{member.name}</span>
-      <span className="score">{formatScore(member.cookieCount)}</span>
       {member.isLagging && (
-        <span role="status" className="warn">◄ NEEDS COOKIES!</span>
+        <span role="status" className="warn needs-cookies">NEEDS COOKIES!</span>
       )}
+      <span className="score">{formatScore(member.cookieCount)}</span>
     </button>
   );
 }

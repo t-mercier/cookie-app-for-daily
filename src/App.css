@@ -56,13 +56,18 @@ body { margin: 0; background: var(--bg-dark); color: var(--text-light); }
   min-width: 40px; font-weight: bold; color: var(--accent-neon);
 }
 .score-row .name {
-  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 40%;
 }
 .score-row .score {
-  min-width: 100px; text-align: right; color: var(--accent-neon); font-weight: bold;
+  min-width: 64px; text-align: right; color: var(--accent-neon); font-weight: bold;
+  margin-left: auto;
 }
 .score-row .warn {
   color: var(--warn-red);
+}
+/* laggard label sits in the gap between the name and the cookie count */
+.score-row .needs-cookies {
+  margin-left: auto; font-size: 9px; white-space: nowrap;
 }
 /* avatar badge — round with ring border */
 .avatar-badge {
