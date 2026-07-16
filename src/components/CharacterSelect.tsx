@@ -136,13 +136,13 @@ export function CharacterSelect({
         </div>
         {error && <p role="alert" className="error-text">{error}</p>}
 
-        <h2 style={{ marginTop: 24, marginBottom: 12, fontSize: 12, color: "var(--text-light)" }}>MANAGE PLAYERS</h2>
+        <h2 style={{ marginTop: 24, marginBottom: 12, fontSize: 12, color: "var(--ink)" }}>MANAGE PLAYERS</h2>
         <ul style={{ listStyle: "none", padding: 0 }}>
           {members.map((member) => {
             const isEditing = editingId === member.id;
             const count = cookieCounts[member.id] ?? 0;
             return (
-              <li key={member.id} style={{ marginBottom: 12, padding: 8, background: "var(--bg-dark)", borderRadius: 4 }}>
+              <li key={member.id} style={{ marginBottom: 12, padding: 8, background: "var(--box)", color: "var(--ink)", border: "2px solid var(--border)", borderRadius: 4 }}>
                 {isEditing ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
