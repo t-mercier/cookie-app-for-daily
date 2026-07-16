@@ -9,6 +9,8 @@ function makeApi(overrides: Partial<CookiesApi> = {}): CookiesApi {
     awardCookie: async () => {},
     addMember: async () => ({ id: "x", name: "X", avatarKey: "cat" }),
     removeMember: async () => {},
+    updateMember: async () => {},
+    removeCookie: async () => {},
     subscribeToChanges: () => () => {},
     ...overrides,
   } as CookiesApi;
@@ -39,4 +41,33 @@ test("award rolls back and sets error on failure", async () => {
   await act(async () => { await result.current.award("a"); });
   expect(result.current.board.find((m) => m.id === "a")!.cookieCount).toBe(1);
   expect(result.current.error).toBe("network");
+});
+
+test("removeCookie optimistically decrements then persists", async () => {
+  let removed = 0;
+  const api = makeApi({ removeCookie: async () => { removed += 1; } });
+  const { result } = renderHook(() => useBoard(api));
+  await waitFor(() => expect(result.current.loading).toBe(false));
+  await act(async () => { await result.current.removeCookie("a"); });
+  expect(result.current.board.find((m) => m.id === "a")!.cookieCount).toBe(0);
+  expect(removed).toBe(1);
+});
+
+test("removeCookie rolls back and sets error on failure", async () => {
+  const api = makeApi({
+    removeCookie: async () => { throw new Error("network"); },
+  });
+  const { result } = renderHook(() => useBoard(api));
+  await waitFor(() => expect(result.current.loading).toBe(false));
+  await act(async () => { await result.current.removeCookie("a"); });
+  expect(result.current.board.find((m) => m.id === "a")!.cookieCount).toBe(1);
+  expect(result.current.error).toBe("network");
+});
+
+test("removeCookie clamps count at 0 (never negative)", async () => {
+  const api = makeApi({ getCookieCounts: async () => ({ a: 0 }) });
+  const { result } = renderHook(() => useBoard(api));
+  await waitFor(() => expect(result.current.loading).toBe(false));
+  await act(async () => { await result.current.removeCookie("a"); });
+  expect(result.current.board.find((m) => m.id === "a")!.cookieCount).toBe(0);
 });

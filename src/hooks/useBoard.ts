@@ -53,6 +53,23 @@ export function useBoard(api: CookiesApi) {
     [api]
   );
 
+  const removeCookie = useCallback(
+    async (memberId: string) => {
+      setCounts((prev) => ({
+        ...prev,
+        [memberId]: Math.max((prev[memberId] ?? 1) - 1, 0),
+      }));
+      try {
+        await api.removeCookie(memberId);
+        setError(null);
+      } catch (caught) {
+        setCounts((prev) => ({ ...prev, [memberId]: (prev[memberId] ?? 0) + 1 }));
+        setError(caught instanceof Error ? caught.message : String(caught));
+      }
+    },
+    [api]
+  );
+
   const board: BoardMember[] = computeBoard(members, counts);
-  return { board, loading, error, award, reload };
+  return { board, loading, error, award, removeCookie, reload };
 }

@@ -16,6 +16,8 @@ function fakeApi(): CookiesApi {
     awardCookie: async () => { awarded += 1; },
     addMember: async () => ({ id: "x", name: "X", avatarKey: "robot" }),
     removeMember: async () => {},
+    updateMember: async () => {},
+    removeCookie: async () => {},
     subscribeToChanges: () => () => {},
   } as CookiesApi;
 }
