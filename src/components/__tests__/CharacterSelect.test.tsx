@@ -58,3 +58,14 @@ test("removes an existing member", async () => {
   await userEvent.click(screen.getByRole("button", { name: /remove ann/i }));
   expect(onRemove).toHaveBeenCalledWith("a");
 });
+
+test("adds a member with image url when url is provided", async () => {
+  const onAdd = vi.fn();
+  setup({ onAdd });
+  const urlInput = screen.getByLabelText(/image url/i);
+  const nameInput = screen.getByLabelText(/name/i);
+  await userEvent.type(nameInput, "Charlie");
+  await userEvent.type(urlInput, "https://example.com/avatar.png");
+  await userEvent.click(screen.getByRole("button", { name: /start/i }));
+  expect(onAdd).toHaveBeenCalledWith("Charlie", "https://example.com/avatar.png");
+});
