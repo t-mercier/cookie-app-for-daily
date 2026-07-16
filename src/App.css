@@ -196,7 +196,7 @@ h1 {
 .score-row .score {
   min-width: 48px;
   text-align: right;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--ink);
   display: flex;
   align-items: center;
