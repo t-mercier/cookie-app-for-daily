@@ -12,10 +12,13 @@ export function CookieAward({
       {show && (
         <motion.div
           data-testid="cookie-award"
-          initial={{ scale: 0, rotate: -20, opacity: 0 }}
-          animate={{ scale: [0, 1.4, 1], rotate: [-20, 10, 0], opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeOut" } }}
-          transition={{ duration: 0.5, times: [0, 0.6, 1] }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeOut" } }}
+          transition={{
+            scale: { type: "spring", stiffness: 460, damping: 11 },
+            opacity: { duration: 0.15 },
+          }}
           style={{
             position: "fixed",
             inset: 0,

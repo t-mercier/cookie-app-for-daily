@@ -28,10 +28,10 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    // Set new timeout to dismiss after 3.5s
+    // Set new timeout to dismiss after 2s
     timeoutRef.current = setTimeout(() => {
       setCelebrating(false);
-    }, 3500);
+    }, 2000);
     await award(memberId);
   }
 
