@@ -27,7 +27,7 @@ export function resolveAvatarSource(
 export function Sprite({ avatarKey, size = 32 }: { avatarKey: string; size?: number }) {
   const bundledMap = useMemo(() => {
     const modules = import.meta.glob(
-      "../../assets/avatars/*.{png,jpg,jpeg,svg,gif,webp}",
+      "../assets/avatars/*.{png,jpg,jpeg,svg,gif,webp}",
       { eager: true, query: "?url", import: "default" }
     ) as Record<string, string>;
     const map: Record<string, string> = {};
