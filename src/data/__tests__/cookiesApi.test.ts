@@ -23,11 +23,13 @@ test("getCookieCounts aggregates rows per member", async () => {
 test("getMembers maps avatar_key to avatarKey", async () => {
   const client = {
     from: () => ({
-      select: () =>
-        Promise.resolve({
-          data: [{ id: "a", name: "Ann", avatar_key: "cat" }],
-          error: null,
-        }),
+      select: () => ({
+        order: () =>
+          Promise.resolve({
+            data: [{ id: "a", name: "Ann", avatar_key: "cat" }],
+            error: null,
+          }),
+      }),
     }),
   } as never;
   const api = createCookiesApi(client);

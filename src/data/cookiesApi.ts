@@ -7,7 +7,8 @@ export function createCookiesApi(client: SupabaseClient) {
     async getMembers(): Promise<Member[]> {
       const { data, error } = await client
         .from("members")
-        .select("id, name, avatar_key");
+        .select("id, name, avatar_key")
+        .order("created_at", { ascending: true });
       if (error) throw new Error(error.message);
       return (data ?? []).map((row) => ({
         id: row.id,
