@@ -7,9 +7,9 @@ const members: Member[] = [
   { id: "c", name: "Cy", avatarKey: "dino" },
 ];
 
-test("sorts by cookie count descending", () => {
+test("preserves input member order", () => {
   const board = computeBoard(members, { a: 1, b: 5, c: 3 });
-  expect(board.map((m) => m.id)).toEqual(["b", "c", "a"]);
+  expect(board.map((m) => m.id)).toEqual(["a", "b", "c"]);
 });
 
 test("counts default to 0 when missing", () => {

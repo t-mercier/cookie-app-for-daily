@@ -1,42 +1,32 @@
 import type { BoardMember } from "../types";
 
 export interface StatsResult {
-  leaders: string[];
-  losers: string[];
+  leaders: BoardMember[];
+  needsCookies: BoardMember[];
 }
 
 export function computeStats(board: BoardMember[]): StatsResult {
   if (board.length === 0) {
-    return { leaders: [], losers: [] };
+    return { leaders: [], needsCookies: [] };
   }
 
+  // Find max for leaders
   let maxCookies = -Infinity;
-  let minCookies = Infinity;
-  const leaderNames: string[] = [];
-  const loserNames: string[] = [];
-
-  // First pass: find max and min
   for (const member of board) {
     if (member.cookieCount > maxCookies) {
       maxCookies = member.cookieCount;
     }
-    if (member.cookieCount < minCookies) {
-      minCookies = member.cookieCount;
-    }
   }
 
-  // Second pass: collect all members at max and min, preserving board order
-  for (const member of board) {
-    if (member.cookieCount === maxCookies) {
-      leaderNames.push(member.name);
-    }
-    if (member.cookieCount === minCookies) {
-      loserNames.push(member.name);
-    }
-  }
+  // Collect all members at max, preserving board order
+  const leaders = board.filter((m) => m.cookieCount === maxCookies);
+
+  // Get the 3 members with lowest cookieCount, sorted ascending by count (stable)
+  const sorted = [...board].sort((a, b) => a.cookieCount - b.cookieCount);
+  const needsCookies = sorted.slice(0, Math.min(3, board.length));
 
   return {
-    leaders: leaderNames,
-    losers: loserNames,
+    leaders,
+    needsCookies,
   };
 }

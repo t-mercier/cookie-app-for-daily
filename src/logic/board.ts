@@ -13,7 +13,5 @@ export function computeBoard(
 
   const minCount = Math.min(...withCounts.map((m) => m.cookieCount));
 
-  return withCounts
-    .map((m) => ({ ...m, isLagging: m.cookieCount === minCount }))
-    .sort((a, b) => b.cookieCount - a.cookieCount);
+  return withCounts.map((m) => ({ ...m, isLagging: m.cookieCount === minCount }));
 }
