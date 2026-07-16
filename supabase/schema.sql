@@ -26,3 +26,9 @@ create policy "anon read members" on members for select using (true);
 create policy "anon write members" on members for all using (true) with check (true);
 create policy "anon read cookies" on cookies for select using (true);
 create policy "anon write cookies" on cookies for all using (true) with check (true);
+
+-- Realtime: tables must be added to the supabase_realtime publication,
+-- otherwise clients subscribed via postgres_changes never receive events
+-- and the board only refreshes on page reload.
+alter publication supabase_realtime add table members;
+alter publication supabase_realtime add table cookies;
