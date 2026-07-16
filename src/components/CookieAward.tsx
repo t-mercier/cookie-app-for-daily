@@ -22,8 +22,12 @@ export function CookieAward({
     }
   }, [show]);
 
-  const handleAnimationEnd = () => {
-    onDone();
+  const handleAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
+    // Child line animations bubble up too — only the container's own
+    // animation ending means the full sequence is over.
+    if (event.target === event.currentTarget) {
+      onDone();
+    }
   };
 
   if (!show) return null;
