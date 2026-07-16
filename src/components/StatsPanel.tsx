@@ -21,7 +21,7 @@ export function StatsPanel({
               {stats.leaders.length > 0 ? (
                 stats.leaders.map((m) => (
                   <span key={m.id} title={m.name} className="leader-with-star">
-                    <Sprite avatarKey={m.avatarKey} size={22} />
+                    <Sprite avatarKey={m.avatarKey} size={32} />
                     <span className="gold-star">★</span>
                   </span>
                 ))
@@ -39,7 +39,7 @@ export function StatsPanel({
               {stats.needsCookies.length > 0 ? (
                 stats.needsCookies.map((m) => (
                   <span key={m.id} title={m.name}>
-                    <Sprite avatarKey={m.avatarKey} size={22} />
+                    <Sprite avatarKey={m.avatarKey} size={32} />
                   </span>
                 ))
               ) : (

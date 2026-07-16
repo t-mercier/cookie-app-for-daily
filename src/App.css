@@ -213,10 +213,9 @@ h1 {
 }
 
 .score-row .needs-cookies {
-  margin-left: auto;
+  flex: 1;
   display: inline-block;
   font-size: 12px;
-  width: 64px;
   text-align: center;
   white-space: normal;
   line-height: 1.3;
@@ -265,10 +264,15 @@ h1 {
 
 .stat-value.warn {
   color: var(--red);
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .stat-value.leaders {
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .stats-section {
@@ -473,4 +477,28 @@ h1 {
   border: 3px solid var(--border);
   border-radius: 6px;
   padding: 12px 14px;
+}
+
+/* Top banner for idle prompt */
+.top-banner {
+  margin-bottom: 14px;
+}
+
+.idle-text {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--ink);
+  text-align: center;
+}
+
+.blink-arrow {
+  display: inline-block;
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
 }

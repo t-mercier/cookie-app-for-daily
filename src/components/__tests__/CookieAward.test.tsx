@@ -1,13 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { CookieAward } from "../CookieAward";
 
-test("shows idle line when show is false", () => {
-  render(<CookieAward show={false} onDone={() => {}} />);
-  expect(screen.getByTestId("cookie-award")).toBeInTheDocument();
-  expect(screen.getByText(/WHO LED THE DAILY TODAY/)).toBeInTheDocument();
+test("renders nothing when show is false", () => {
+  const { container } = render(<CookieAward show={false} onDone={() => {}} />);
+  expect(container.firstChild).toBeNull();
 });
 
-test("renders the dialog when show is true", () => {
+test("renders the award sequence when show is true", () => {
   render(<CookieAward show={true} onDone={() => {}} />);
   expect(screen.getByTestId("cookie-award")).toBeInTheDocument();
 });

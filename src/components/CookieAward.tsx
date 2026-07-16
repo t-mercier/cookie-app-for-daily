@@ -29,28 +29,26 @@ export function CookieAward({
     }
   };
 
+  if (!show) {
+    return null;
+  }
+
   return (
     <div
       ref={containerRef}
       data-testid="cookie-award"
-      className={`cookie-award-dialog ${show ? "active" : "idle"}`}
-      onAnimationEnd={show ? handleAnimationEnd : undefined}
+      className="cookie-award-dialog active"
+      onAnimationEnd={handleAnimationEnd}
     >
-      {show ? (
-        <div className="box dialog-box">
-          <div className="dl dl-1">{(memberName ?? "SOMEONE").toUpperCase()} LED THE DAILY!</div>
-          <div className="dl dl-2">GOOD JOB, BRAVE LITTLE ONE... *PAT PAT*</div>
-          <div className="dl dl-3">
-            HERE, HAVE A COOKIE!
-            <PixelCookie size={18} />
-          </div>
-          <span className="adv">▼</span>
+      <div className="box dialog-box">
+        <div className="dl dl-1">{(memberName ?? "SOMEONE").toUpperCase()} LED THE DAILY!</div>
+        <div className="dl dl-2">GOOD JOB, BRAVE LITTLE ONE... *PAT PAT*</div>
+        <div className="dl dl-3">
+          HERE, HAVE A COOKIE!
+          <PixelCookie size={18} />
         </div>
-      ) : (
-        <div className="box dialog-box idle-content">
-          <div className="idle-text">WHO LED THE DAILY TODAY? PICK A HERO! <span className="blink-arrow">▼</span></div>
-        </div>
-      )}
+        <span className="adv">▼</span>
+      </div>
     </div>
   );
 }

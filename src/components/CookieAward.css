@@ -1,10 +1,6 @@
 .cookie-award-dialog {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9999;
   pointer-events: none;
+  margin-top: 14px;
 }
 
 .cookie-award-dialog.active {

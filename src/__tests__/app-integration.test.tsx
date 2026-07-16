@@ -28,8 +28,12 @@ test("unlock, see board, award a cookie", async () => {
   await userEvent.click(screen.getByRole("button", { name: /unlock/i }));
 
   await waitFor(() => expect(screen.getByTestId("row-a")).toBeInTheDocument());
+
+  // Click to award a cookie
   await userEvent.click(screen.getByTestId("row-a"));
-  expect(screen.getByTestId("cookie-award")).toBeInTheDocument();
+
+  // Award dialog should appear (now below stats panel)
+  await waitFor(() => expect(screen.getByTestId("cookie-award")).toBeInTheDocument());
 });
 
 test("opens the character-select overlay", async () => {

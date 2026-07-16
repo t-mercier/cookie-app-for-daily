@@ -61,22 +61,28 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
             {loading ? (
               <p className="arcade-title">LOADING…</p>
             ) : view === "board" ? (
-              <div className="layout">
-                <div className="box">
-                  <div className="box-label">ROSTER</div>
-                  <div className="roster">
-                    <ScoreTable
-                      board={board}
-                      onAward={handleAward}
-                      onManage={() => setView("players")}
-                      needyIds={computeStats(board).needsCookies.map((m) => m.id)}
-                    />
+              <>
+                <div className="top-banner box">
+                  <div className="idle-text">WHO LED THE DAILY TODAY? PICK A HERO! <span className="blink-arrow">▼</span></div>
+                </div>
+                <div className="layout">
+                  <div className="box">
+                    <div className="box-label">ROSTER</div>
+                    <div className="roster">
+                      <ScoreTable
+                        board={board}
+                        onAward={handleAward}
+                        onManage={() => setView("players")}
+                        needyIds={computeStats(board).needsCookies.map((m) => m.id)}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <StatsPanel board={board} />
+                    <CookieAward show={celebrating} memberName={celebratingName} onDone={() => setCelebrating(false)} />
                   </div>
                 </div>
-                <div>
-                  <StatsPanel board={board} />
-                </div>
-              </div>
+              </>
             ) : view === "players" ? (
               <CharacterSelect
                 inline
@@ -93,7 +99,6 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
             ) : (
               <VEBoard />
             )}
-            <CookieAward show={celebrating} memberName={celebratingName} onDone={() => setCelebrating(false)} />
           </div>
         </div>
       </div>
