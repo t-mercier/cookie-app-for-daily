@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { PasswordGate } from "./components/PasswordGate";
 import { ScoreTable } from "./components/ScoreTable";
@@ -12,18 +12,44 @@ import { PixelCookie } from "./components/PixelCookie";
 import { useBoard } from "./hooks/useBoard";
 import { computeStats } from "./logic/stats";
 import { cookiesApi, type CookiesApi } from "./data/cookiesApi";
+import { canAwardToday } from "./logic/awardRule";
 
 export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
   const { board, loading, error, award, removeCookie, reload } = useBoard(api);
   const [lastAward, setLastAward] = useState<{ name: string; key: number } | null>(null);
   const [resetOpen, setResetOpen] = useState(false);
   const [view, setView] = useState<"board" | "players" | "ve">("board");
+  const [notice, setNotice] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (notice) {
+      const timer = setTimeout(() => setNotice(null), 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [notice]);
 
   async function handleAward(memberId: string) {
     const member = board.find((m) => m.id === memberId);
-    if (member) {
-      setLastAward({ name: member.name, key: (lastAward?.key ?? 0) + 1 });
+    if (!member) return;
+
+    try {
+      const latest = await api.getLatestAwardAt();
+      const check = canAwardToday(new Date(), latest);
+      if (!check.allowed) {
+        const message =
+          check.reason === "weekend"
+            ? "NO COOKIES ON WEEKENDS!"
+            : "TODAY'S COOKIE IS ALREADY GIVEN!";
+        setNotice(message);
+        return;
+      }
+    } catch (caught) {
+      const errorMsg = caught instanceof Error ? caught.message : String(caught);
+      setNotice(`ERROR: ${errorMsg}`);
+      return;
     }
+
+    setLastAward({ name: member.name, key: (lastAward?.key ?? 0) + 1 });
     await award(memberId);
   }
 
@@ -50,6 +76,11 @@ export default function App({ api = cookiesApi }: { api?: CookiesApi }) {
                 <div className="top-banner box">
                   <div className="idle-text">WHO LED THE DAILY TODAY? PICK A HERO! <span className="blink-arrow">▼</span></div>
                 </div>
+                {notice && (
+                  <div className="box" data-testid="award-notice" style={{ color: "var(--red)", marginTop: 12, marginBottom: 12, textAlign: "center" }}>
+                    {notice}
+                  </div>
+                )}
                 <div className="layout">
                   <div className="box">
                     <div className="box-label">ROSTER</div>

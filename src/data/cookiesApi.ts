@@ -104,6 +104,17 @@ export function createCookiesApi(client: SupabaseClient) {
         .gte("awarded_at", "1970-01-01");
       if (error) throw new Error(error.message);
     },
+
+    async getLatestAwardAt(): Promise<string | null> {
+      const { data, error } = await client
+        .from("cookies")
+        .select("awarded_at")
+        .order("awarded_at", { ascending: false })
+        .limit(1);
+      if (error) throw new Error(error.message);
+      if (!data || data.length === 0) return null;
+      return data[0].awarded_at;
+    },
   };
 }
 

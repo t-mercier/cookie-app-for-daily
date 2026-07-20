@@ -233,3 +233,59 @@ test("removeCookie throws on Supabase error", async () => {
   const api = createCookiesApi(client);
   await expect(api.removeCookie("m1")).rejects.toThrow("delete failed");
 });
+
+test("getLatestAwardAt returns the most recent awarded_at", async () => {
+  const client = {
+    from: () => ({
+      select: () => ({
+        order: () => ({
+          limit: () =>
+            Promise.resolve({
+              data: [{ awarded_at: "2026-07-20T10:00:00Z" }],
+              error: null,
+            }),
+        }),
+      }),
+    }),
+  } as never;
+  const api = createCookiesApi(client);
+  const result = await api.getLatestAwardAt();
+  expect(result).toBe("2026-07-20T10:00:00Z");
+});
+
+test("getLatestAwardAt returns null when no cookies exist", async () => {
+  const client = {
+    from: () => ({
+      select: () => ({
+        order: () => ({
+          limit: () =>
+            Promise.resolve({
+              data: [],
+              error: null,
+            }),
+        }),
+      }),
+    }),
+  } as never;
+  const api = createCookiesApi(client);
+  const result = await api.getLatestAwardAt();
+  expect(result).toBeNull();
+});
+
+test("getLatestAwardAt throws on Supabase error", async () => {
+  const client = {
+    from: () => ({
+      select: () => ({
+        order: () => ({
+          limit: () =>
+            Promise.resolve({
+              data: null,
+              error: { message: "query failed" },
+            }),
+        }),
+      }),
+    }),
+  } as never;
+  const api = createCookiesApi(client);
+  await expect(api.getLatestAwardAt()).rejects.toThrow("query failed");
+});
