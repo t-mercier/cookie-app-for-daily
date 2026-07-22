@@ -7,8 +7,13 @@ const members: Member[] = [
   { id: "c", name: "Cy", avatarKey: "dino" },
 ];
 
-test("preserves input member order", () => {
+test("sorts by cookie count, highest first", () => {
   const board = computeBoard(members, { a: 1, b: 5, c: 3 });
+  expect(board.map((m) => m.id)).toEqual(["b", "c", "a"]);
+});
+
+test("keeps input order as a stable tiebreak on equal counts", () => {
+  const board = computeBoard(members, { a: 2, b: 2, c: 2 });
   expect(board.map((m) => m.id)).toEqual(["a", "b", "c"]);
 });
 
